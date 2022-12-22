@@ -1,5 +1,6 @@
 import Game from "../models/Game.js";
 import MoveAccuracy from "../models/MoveAccuracy.js";
+import GameStageInfo from "../models/GameStageInfo.js";
 
 export const getYearlyStats = async (req, res) => {
   try {
@@ -270,6 +271,139 @@ export const getTerminationByResult = async (req, res) => {
       },
     ]);
     res.status(200).json(terminationByResult);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getGameEndedIn = async (req, res) => {
+  try {
+    const { color } = req.params;
+    const agg_query =
+      color === "All"
+        ? [
+            {
+              $group: {
+                _id: null,
+                count: {
+                  $sum: 1,
+                },
+                data: {
+                  $push: "$$ROOT",
+                },
+              },
+            },
+            {
+              $unwind: {
+                path: "$data",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                count: 1,
+                GameEndedIn: "$data.ended_in",
+              },
+            },
+            {
+              $group: {
+                _id: "$GameEndedIn",
+                value: {
+                  $sum: 1,
+                },
+                total: {
+                  $first: "$count",
+                },
+              },
+            },
+            {
+              $project: {
+                value: 1,
+                total: 1,
+                percentage: {
+                  $divide: ["$value", "$total"],
+                },
+                id: "$_id",
+                label: "$_id",
+                _id: 0,
+              },
+            },
+          ]
+        : [
+            {
+              $lookup: {
+                from: "games",
+                localField: "GameId",
+                foreignField: "GameId",
+                as: "result",
+              },
+            },
+            {
+              $set: {
+                UserColor: {
+                  $arrayElemAt: ["$result.UserColor", 0],
+                },
+              },
+            },
+            {
+              $match: {
+                UserColor: `${color}`,
+              },
+            },
+            {
+              $project: {
+                result: 0,
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: {
+                  $sum: 1,
+                },
+                data: {
+                  $push: "$$ROOT",
+                },
+              },
+            },
+            {
+              $unwind: {
+                path: "$data",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                count: 1,
+                GameEndedIn: "$data.ended_in",
+              },
+            },
+            {
+              $group: {
+                _id: "$GameEndedIn",
+                value: {
+                  $sum: 1,
+                },
+                total: {
+                  $first: "$count",
+                },
+              },
+            },
+            {
+              $project: {
+                value: 1,
+                total: 1,
+                percentage: {
+                  $divide: ["$value", "$total"],
+                },
+                id: "$_id",
+                label: "$_id",
+                _id: 0,
+              },
+            },
+          ];
+    const gameEndedIn = await GameStageInfo.aggregate(agg_query);
+    res.status(200).json(gameEndedIn);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

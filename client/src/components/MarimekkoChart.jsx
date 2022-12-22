@@ -1,15 +1,12 @@
-import { random } from "lodash";
 import { ResponsiveMarimekko } from "@nivo/marimekko";
-import { Fragment } from "react";
 import { useTheme } from "@mui/system";
 import FlexBetween from "./FlexBetween";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import {
   BalanceOutlined,
   IndeterminateCheckBox,
   LocalHospital,
 } from "@mui/icons-material";
-import { useGetResultStatsQuery } from "state/api";
 
 const commonProps = {
   margin: {
@@ -39,22 +36,8 @@ const commonProps = {
   ],
 };
 
-const MarimekkoChart = () => {
+const MarimekkoChart = ({ chartData }) => {
   const theme = useTheme();
-  const { data, isLoading } = useGetResultStatsQuery();
-  if (!data || isLoading) return <CircularProgress />;
-  const win = data.find((item) => item.result === "Win");
-  const draw = data.find((item) => item.result === "Draw");
-  const loss = data.find((item) => item.result === "Loss");
-  const chartData = [
-    {
-      statement: "Result",
-      participation: 2373,
-      win: win.games,
-      draw: draw.games,
-      loss: loss.games,
-    },
-  ];
   return (
     <Box
       gridColumn="span 2"
@@ -71,19 +54,19 @@ const MarimekkoChart = () => {
         <FlexBetween>
           <LocalHospital style={{ fill: theme.palette.result.win }} />
           <Typography variant="h3" fontWeight="600" mr="10px">
-            {win.percentGames.toFixed(2)}%
+            {chartData[0].winpct.toFixed(2)}%
           </Typography>
         </FlexBetween>
         <FlexBetween>
           <BalanceOutlined style={{ fill: theme.palette.result.draw }} />
           <Typography variant="h3" fontWeight="600" mr="10px">
-            {draw.percentGames.toFixed(2)}%
+            {chartData[0].drawpct.toFixed(2)}%
           </Typography>
         </FlexBetween>
         <FlexBetween>
           <IndeterminateCheckBox style={{ fill: theme.palette.result.loss }} />
           <Typography variant="h3" fontWeight="600" mr="10px">
-            {loss.percentGames.toFixed(2)}%
+            {chartData[0].losspct.toFixed(2)}%
           </Typography>
         </FlexBetween>
       </FlexBetween>

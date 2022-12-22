@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 import gamesRoutes from "./routes/games.js";
-// import generalRoutes from "./routes/general.js";
+import geographyRoutes from "./routes/geography.js";
 // import managementRoutes from "./routes/management.js";
 // import salesRoutes from "./routes/sales.js";
 
@@ -33,7 +33,7 @@ app.use(cors());
 
 /* ROUTES */
 app.use("/games", gamesRoutes);
-// app.use("/general", generalRoutes);
+app.use("/geography", geographyRoutes);
 // app.use("/management", managementRoutes);
 // app.use("/sales", salesRoutes);
 

@@ -50,6 +50,7 @@ const Overview = () => {
     useGetMoveAccuracyQuery("Black");
   const { data: opponentEloResults, isLoading: isOpponentEloResultsLoading } =
     useGetOpponentEloResultsQuery();
+
   if (
     !yearlyStats ||
     isYearlyStatsLoading ||
@@ -65,6 +66,21 @@ const Overview = () => {
     isOpponentEloResultsLoading
   )
     return <CircularProgress />;
+  const win = resultStats.find((item) => item.result === "Win");
+  const draw = resultStats.find((item) => item.result === "Draw");
+  const loss = resultStats.find((item) => item.result === "Loss");
+  const chartData = [
+    {
+      statement: "Result",
+      participation: 2373,
+      win: win.games,
+      draw: draw.games,
+      loss: loss.games,
+      winpct: win.percentGames,
+      drawpct: draw.percentGames,
+      losspct: loss.percentGames,
+    },
+  ];
   let totalGames = yearlyStats.reduce(function (prev, current) {
     return prev + +current.totalGames;
   }, 0);
@@ -104,7 +120,6 @@ const Overview = () => {
       data: moveAccuracyBlack,
     },
   ];
-  console.log(opponentEloResults);
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -140,7 +155,7 @@ const Overview = () => {
           p="0rem"
           borderRadius="1.55rem"
         >
-          <MarimekkoChart />
+          <MarimekkoChart chartData={chartData} />
         </Box>
         <Box
           gridColumn="span 12"

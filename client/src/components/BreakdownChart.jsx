@@ -4,7 +4,6 @@ import { Box, useTheme } from "@mui/material";
 
 const BreakdownChart = ({ data, colors }) => {
   const theme = useTheme();
-  console.log(data);
   return (
     <Box
       height="100%"

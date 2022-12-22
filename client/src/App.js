@@ -8,6 +8,8 @@ import Dashboard from "scenes/dashboard";
 import Layout from "scenes/layout";
 import Overview from "scenes/overview";
 import GameResults from "scenes/gameresults";
+import GamePhases from "scenes/gamephases";
+import Geography from "scenes/geography";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -23,6 +25,8 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/overview" element={<Overview />} />
               <Route path="/gameresults" element={<GameResults />} />
+              {/* <Route path="/gameresults" element={<GameResults />} /> */}
+              <Route path="/gamephases" element={<GamePhases />} />
               {/* <Route path="/forks" element={<Forks />} />
               <Route path="/pins" element={<Pins />} />
               <Route path="/mates" element={<Mates />} />
@@ -31,8 +35,8 @@ function App() {
               <Route path="/pieces" element={<Pieces />} />
               <Route path="/castling" element={<Castling />} />
               <Route path="/timeofday" element={<TimeOfDay />} />
-              <Route path="/dayofweek" element={<DayOfWeek />} />
-              <Route path="/geography" element={<Geography />} /> */}
+              <Route path="/dayofweek" element={<DayOfWeek />} />*/}
+              <Route path="/opponentsmap" element={<Geography />} />
             </Route>
           </Routes>
         </ThemeProvider>

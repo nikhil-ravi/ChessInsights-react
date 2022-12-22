@@ -9,6 +9,8 @@ export const api = createApi({
     "MoveAccuracy",
     "OpponentEloResults",
     "TerminationByResult",
+    "GameEndedIn",
+    "Geography",
   ],
   endpoints: (build) => ({
     getYearlyStats: build.query({
@@ -31,6 +33,14 @@ export const api = createApi({
       query: (result) => `games/terminationbyresult/${result}`,
       providesTags: ["TerminationByResult"],
     }),
+    getGameEndedIn: build.query({
+      query: (color) => `games/gameendedin/${color}`,
+      providesTags: ["GameEndedIn"],
+    }),
+    getGeography: build.query({
+      query: () => "geography/geography",
+      providesTags: ["Geography"],
+    }),
   }),
 });
 
@@ -40,4 +50,6 @@ export const {
   useGetMoveAccuracyQuery,
   useGetOpponentEloResultsQuery,
   useGetTerminationByResultQuery,
+  useGetGameEndedInQuery,
+  useGetGeographyQuery,
 } = api;
