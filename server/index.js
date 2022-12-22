@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import gamesRoutes from "./routes/games.js";
 import geographyRoutes from "./routes/geography.js";
+import calendarRoutes from "./routes/calendar.js";
 // import managementRoutes from "./routes/management.js";
 // import salesRoutes from "./routes/sales.js";
 
@@ -34,7 +35,7 @@ app.use(cors());
 /* ROUTES */
 app.use("/games", gamesRoutes);
 app.use("/geography", geographyRoutes);
-// app.use("/management", managementRoutes);
+app.use("/calendar", calendarRoutes);
 // app.use("/sales", salesRoutes);
 
 /* MONGOOSE SETUP */

@@ -15,7 +15,6 @@ import {
   useGetMoveAccuracyQuery,
   useGetOpponentEloResultsQuery,
 } from "state/api";
-import { ResponsiveBar } from "@nivo/bar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
 import MarimekkoChart from "components/MarimekkoChart";
@@ -26,7 +25,8 @@ import AnalysisBreakdown from "components/AnalysisBreakdown";
 import FlexBetween from "components/FlexBetween";
 import { TabPanel, a11yProps } from "components/TabUtils";
 import LineChart from "components/LineChart";
-import MyResponsiveMarimekko from "components/ResultsHistogram";
+import ResultsHistogram from "components/ResultsHistogram";
+import MyResponsiveBar from "components/MyResponsiveBar";
 
 const Overview = () => {
   const theme = useTheme();
@@ -120,6 +120,7 @@ const Overview = () => {
       data: moveAccuracyBlack,
     },
   ];
+  console.log(opponentEloResults);
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -164,85 +165,12 @@ const Overview = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <ResponsiveBar
+          <MyResponsiveBar
             data={yearlyStats}
-            keys={["totalGames"]}
-            indexBy="_id"
-            margin={{ top: 20, right: 60, bottom: 50, left: 60 }}
-            padding={0}
-            valueScale={{ type: "linear" }}
-            indexScale={{ type: "band", round: true }}
-            theme={{
-              axis: {
-                domain: {
-                  line: {
-                    stroke: theme.palette.secondary[200],
-                  },
-                },
-                legend: {
-                  text: {
-                    fill: theme.palette.secondary[200],
-                  },
-                },
-                ticks: {
-                  line: {
-                    stroke: theme.palette.secondary[200],
-                    strokeWidth: 1,
-                  },
-                  text: {
-                    fill: theme.palette.secondary[200],
-                  },
-                },
-              },
-              legends: {
-                text: {
-                  fill: theme.palette.secondary[200],
-                },
-              },
-              tooltip: {
-                container: {
-                  color: theme.palette.primary.main,
-                },
-              },
-            }}
-            // colors={{ datum: "data.color" }}
-            borderColor={{
-              from: "color",
-              modifiers: [["darker", 1.6]],
-            }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: "Year",
-              legendPosition: "middle",
-              legendOffset: 32,
-            }}
-            axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: "Number of Games",
-              legendPosition: "middle",
-              legendOffset: -40,
-              tickValues: 4,
-            }}
-            labelSkipWidth={12}
-            labelSkipHeight={12}
-            labelTextColor={{
-              from: "color",
-              modifiers: [["darker", 1.6]],
-            }}
-            legends={[]}
-            role="application"
-            ariaLabel="Nivo bar chart demo"
-            barAriaLabel={function (e) {
-              return (
-                e.id + ": " + e.formattedValue + " in country: " + e.indexValue
-              );
-            }}
+            keys="totalGames"
+            index="_id"
+            xlabel="Year"
+            ylabel="Number of Games"
           />
         </Box>
       </Box>
@@ -414,7 +342,46 @@ const Overview = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <MyResponsiveMarimekko data={opponentEloResults} />
+          <ResultsHistogram
+            data={opponentEloResults}
+            bottomLegend="Opponent Rating"
+            tooltip={({ id, value, color, data }) => (
+              <div
+                style={{
+                  padding: 12,
+                  background: theme.palette.primary.main,
+                }}
+              >
+                <span>
+                  {data._id}-{data._id + 100}
+                </span>
+                {data.win && (
+                  <>
+                    <br />
+                    <strong>
+                      Win: {data.winpct.toFixed(2)}% ({data.win})
+                    </strong>
+                  </>
+                )}
+                {data.draw && (
+                  <>
+                    <br />
+                    <strong>
+                      Draw: {data.drawpct.toFixed(2)}% ({data.draw})
+                    </strong>
+                  </>
+                )}
+                {data.loss && (
+                  <>
+                    <br />
+                    <strong>
+                      Loss: {data.losspct.toFixed(2)}% ({data.loss})
+                    </strong>
+                  </>
+                )}
+              </div>
+            )}
+          />
         </Box>
       </Box>
       <Divider />

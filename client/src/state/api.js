@@ -11,6 +11,9 @@ export const api = createApi({
     "TerminationByResult",
     "GameEndedIn",
     "Geography",
+    "GamesByCalendar",
+    "AccByCalendar",
+    "ResultsByCalendar",
   ],
   endpoints: (build) => ({
     getYearlyStats: build.query({
@@ -41,6 +44,18 @@ export const api = createApi({
       query: () => "geography/geography",
       providesTags: ["Geography"],
     }),
+    getGamesByCalendar: build.query({
+      query: (qType) => `calendar/games/${qType}`,
+      providesTags: ["GamesByCalendar"],
+    }),
+    getAccByCalendar: build.query({
+      query: (qType) => `calendar/accuracy/${qType}`,
+      providesTags: ["AccByCalendar"],
+    }),
+    getResultsByCalendar: build.query({
+      query: (qType) => `calendar/results/${qType}`,
+      providesTags: ["ResultsByCalendar"],
+    }),
   }),
 });
 
@@ -52,4 +67,7 @@ export const {
   useGetTerminationByResultQuery,
   useGetGameEndedInQuery,
   useGetGeographyQuery,
+  useGetGamesByCalendarQuery,
+  useGetAccByCalendarQuery,
+  useGetResultsByCalendarQuery,
 } = api;

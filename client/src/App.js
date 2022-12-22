@@ -10,6 +10,8 @@ import Overview from "scenes/overview";
 import GameResults from "scenes/gameresults";
 import GamePhases from "scenes/gamephases";
 import Geography from "scenes/geography";
+import TimeOfDay from "scenes/timeofday";
+import DayOfWeek from "scenes/dayofweek";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -25,7 +27,6 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/overview" element={<Overview />} />
               <Route path="/gameresults" element={<GameResults />} />
-              {/* <Route path="/gameresults" element={<GameResults />} /> */}
               <Route path="/gamephases" element={<GamePhases />} />
               {/* <Route path="/forks" element={<Forks />} />
               <Route path="/pins" element={<Pins />} />
@@ -33,9 +34,9 @@ function App() {
               <Route path="/hangingpieces" element={<HangingPieces />} />
               <Route path="/movequality" element={<MoveQuality />} />
               <Route path="/pieces" element={<Pieces />} />
-              <Route path="/castling" element={<Castling />} />
+              <Route path="/castling" element={<Castling />} />*/}
               <Route path="/timeofday" element={<TimeOfDay />} />
-              <Route path="/dayofweek" element={<DayOfWeek />} />*/}
+              <Route path="/dayofweek" element={<DayOfWeek />} />
               <Route path="/opponentsmap" element={<Geography />} />
             </Route>
           </Routes>

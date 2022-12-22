@@ -1,7 +1,12 @@
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 
-const MyResponsiveMarimekko = ({ data /* see data tab */ }) => {
+const ResultsHistogram = ({
+  data,
+  tooltip,
+  leftTickVals = 5,
+  bottomLegend,
+}) => {
   const theme = useTheme();
   return (
     <ResponsiveBar
@@ -17,7 +22,7 @@ const MyResponsiveMarimekko = ({ data /* see data tab */ }) => {
         tickPadding: 5,
         ticksPosition: "left",
         tickRotation: 0,
-        legend: "Opponent Rating",
+        legend: bottomLegend,
         legendOffset: 36,
         legendPosition: "middle",
       }}
@@ -29,8 +34,10 @@ const MyResponsiveMarimekko = ({ data /* see data tab */ }) => {
         legend: "",
         legendOffset: -40,
         legendPosition: "middle",
+        tickValues: leftTickVals,
+        format: (d) => `${d}%`,
       }}
-      margin={{ top: 0, right: 80, bottom: 20, left: 80 }}
+      margin={{ top: 20, right: 80, bottom: 45, left: 80 }}
       theme={{
         axis: {
           domain: {
@@ -123,44 +130,9 @@ const MyResponsiveMarimekko = ({ data /* see data tab */ }) => {
       enableSlices="x"
       valueFormat="> .2f"
       enableLabel={false}
-      tooltip={({ id, value, color, data }) => (
-        <div
-          style={{
-            padding: 12,
-            background: theme.palette.primary.main,
-          }}
-        >
-          <span>
-            {data._id}-{data._id + 100}
-          </span>
-          {data.win && (
-            <>
-              <br />
-              <strong>
-                Win: {data.winpct.toFixed(2)}% ({data.win})
-              </strong>
-            </>
-          )}
-          {data.draw && (
-            <>
-              <br />
-              <strong>
-                Draw: {data.drawpct.toFixed(2)}% ({data.draw})
-              </strong>
-            </>
-          )}
-          {data.loss && (
-            <>
-              <br />
-              <strong>
-                Loss: {data.losspct.toFixed(2)}% ({data.loss})
-              </strong>
-            </>
-          )}
-        </div>
-      )}
+      tooltip={tooltip}
     />
   );
 };
 
-export default MyResponsiveMarimekko;
+export default ResultsHistogram;

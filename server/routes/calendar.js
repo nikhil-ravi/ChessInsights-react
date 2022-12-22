@@ -1,8 +1,14 @@
 import express from "express";
-import { getSales } from "../controllers/sales.js";
+import {
+  getGamesByCalendar,
+  getAccByCalendar,
+  getResultsByCalendar,
+} from "../controllers/calendar.js";
 
 const router = express.Router();
 
-router.get("/sales", getSales);
+router.get("/games/:qType", getGamesByCalendar);
+router.get("/accuracy/:qType", getAccByCalendar);
+router.get("/results/:qType", getResultsByCalendar);
 
 export default router;
