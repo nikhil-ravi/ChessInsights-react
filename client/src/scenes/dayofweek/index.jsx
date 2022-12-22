@@ -101,6 +101,18 @@ const DayOfWeek = () => {
             ylabel="Average Accuracy"
             labelFormat={true}
             maxValue="100"
+            tooltip={({ indexValue, value }) => (
+              <div
+                style={{
+                  padding: 12,
+                  background: theme.palette.primary.main,
+                }}
+              >
+                <span>{indexValue}</span>
+                <br />
+                <span>Average Accuracy: {value.toFixed(2)}%</span>
+              </div>
+            )}
           />
         </Box>
       </Box>

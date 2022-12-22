@@ -171,6 +171,18 @@ const Overview = () => {
             index="_id"
             xlabel="Year"
             ylabel="Number of Games"
+            tooltip={({ indexValue, value }) => (
+              <div
+                style={{
+                  padding: 12,
+                  background: theme.palette.primary.main,
+                }}
+              >
+                <span>{indexValue}</span>
+                <br />
+                <span>Average Accuracy: {value}</span>
+              </div>
+            )}
           />
         </Box>
       </Box>

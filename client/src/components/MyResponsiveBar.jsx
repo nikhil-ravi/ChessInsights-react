@@ -9,6 +9,7 @@ const MyResponsiveBar = ({
   ylabel,
   labelFormat = false,
   maxValue = "auto",
+  tooltip,
 }) => {
   const theme = useTheme();
   return (
@@ -86,18 +87,7 @@ const MyResponsiveBar = ({
         modifiers: [["darker", 1.6]],
       }}
       legends={[]}
-      tooltip={({ indexValue, value }) => (
-        <div
-          style={{
-            padding: 12,
-            background: theme.palette.primary.main,
-          }}
-        >
-          <span>{indexValue}</span>
-          <br />
-          <span>Average Accuracy: {value.toFixed(2)}%</span>
-        </div>
-      )}
+      tooltip={tooltip}
     />
   );
 };
