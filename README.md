@@ -1,6 +1,8 @@
-# Chess Insights drawn by Chess.com games
+# Chess Insights
 
-![Screenshot](./screenshot.png)
+Chess insights drawn by analyzing Chess.com games of a player.
+
+![Screenshot](./screenshot.jpeg)
 
 # Installation
 
