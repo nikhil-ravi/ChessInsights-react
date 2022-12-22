@@ -1,6 +1,6 @@
 # Chess Insights drawn by Chess.com games
 
-[Screenshot](./screenshot.png)
+![Screenshot](./screenshot.png)
 
 # Installation
 

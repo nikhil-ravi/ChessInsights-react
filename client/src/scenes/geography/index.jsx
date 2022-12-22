@@ -118,7 +118,31 @@ const Geography = () => {
           projectionRotation={[0, 0, 0]}
           borderWidth={1.3}
           borderColor="#ffffff"
-          legends={[]}
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              justify: true,
+              translateX: 20,
+              translateY: -100,
+              itemsSpacing: 0,
+              itemWidth: 94,
+              itemHeight: 18,
+              itemDirection: "left-to-right",
+              // itemTextColor: "#444444",
+              itemOpacity: 0.85,
+              symbolSize: 18,
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemTextColor: "#000000",
+                    itemOpacity: 1,
+                  },
+                },
+              ],
+            },
+          ]}
           tooltip={({ feature }) => {
             if (!feature.data) return <></>;
             return (
