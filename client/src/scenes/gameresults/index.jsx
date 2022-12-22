@@ -62,6 +62,7 @@ const GameResults = () => {
         </Box>
       </Box>
       <Divider />
+      <br />
       <Header subtitle="Games you drew by..." sx={{ mt: "20px" }} />
       <Box
         mt="20px"
@@ -91,6 +92,7 @@ const GameResults = () => {
       </Box>
 
       <Divider />
+      <br />
       <Header subtitle="Games you lost by..." sx={{ mt: "20px" }} />
       <Box
         mt="20px"

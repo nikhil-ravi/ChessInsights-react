@@ -68,6 +68,7 @@ const TimeOfDay = () => {
         </Box>
       </Box>
       <Divider />
+      <br />
       <Header subtitle="Accuracy by time of day" sx={{ mt: "20px" }} />
       <Box
         mt="20px"
@@ -105,6 +106,7 @@ const TimeOfDay = () => {
       </Box>
 
       <Divider />
+      <br />
       <Header subtitle="Results by time of day" sx={{ mt: "20px" }} />
       <Box
         mt="20px"

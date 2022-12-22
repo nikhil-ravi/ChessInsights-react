@@ -47,18 +47,22 @@ const navItems = [
   {
     text: "Overview",
     icon: <SavedSearchOutlined />,
+    disabled: false,
   },
   {
     text: "Game Results",
     icon: <EmojiEventsOutlined />,
+    disabled: false,
   },
   {
     text: "Game Shapes",
     icon: <PentagonOutlined />,
+    disabled: true,
   },
   {
     text: "Game Phases",
     icon: <SportsScoreOutlined />,
+    disabled: false,
   },
   {
     text: "Tactics",
@@ -67,22 +71,27 @@ const navItems = [
   {
     text: "Forks",
     icon: <ForkLeftOutlined />,
+    disabled: true,
   },
   {
     text: "Pins",
     icon: <PushPinOutlined />,
+    disabled: true,
   },
   {
     text: "Mates",
     icon: <TagOutlined />,
+    disabled: true,
   },
   {
     text: "Hanging Pieces",
     icon: <CheckroomOutlined />,
+    disabled: true,
   },
   {
     text: "Free Pieces",
     icon: <RedeemOutlined />,
+    disabled: true,
   },
   {
     text: "Moves",
@@ -91,14 +100,17 @@ const navItems = [
   {
     text: "Move Quality",
     icon: <WorkspacePremiumOutlined />,
+    disabled: true,
   },
   {
     text: "Pieces",
     icon: <PieChartOutlined />,
+    disabled: true,
   },
   {
     text: "Castling",
     icon: <CastleOutlined />,
+    disabled: true,
   },
   {
     text: "Calendar",
@@ -107,10 +119,12 @@ const navItems = [
   {
     text: "Time of Day",
     icon: <AccessTimeOutlined />,
+    disabled: false,
   },
   {
     text: "Day of Week",
     icon: <CalendarMonthOutlined />,
+    disabled: false,
   },
   {
     text: "Geography",
@@ -119,6 +133,7 @@ const navItems = [
   {
     text: "Opponents Map",
     icon: <PublicOutlined />,
+    disabled: false,
   },
 ];
 
@@ -173,7 +188,7 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, disabled }) => {
                 if (!icon) {
                   return (
                     <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
@@ -199,6 +214,7 @@ const Sidebar = ({
                             ? theme.palette.primary[600]
                             : theme.palette.secondary[100],
                       }}
+                      disabled={disabled}
                     >
                       <ListItemIcon
                         sx={{

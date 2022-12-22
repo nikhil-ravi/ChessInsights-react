@@ -68,7 +68,8 @@ const DayOfWeek = () => {
         </Box>
       </Box>
       <Divider />
-      <Header subtitle="Accuracy by time of day" sx={{ mt: "20px" }} />
+      <br />
+      <Header subtitle="Accuracy by day of week" />
       <Box
         mt="20px"
         mb="20px"
@@ -105,6 +106,7 @@ const DayOfWeek = () => {
       </Box>
 
       <Divider />
+      <br />
       <Header subtitle="Results by day of week" sx={{ mt: "20px" }} />
       <Box
         mt="20px"

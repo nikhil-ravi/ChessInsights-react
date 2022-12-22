@@ -175,6 +175,7 @@ const Overview = () => {
         </Box>
       </Box>
       <Divider />
+      <br />
       <Header subtitle="Average accuracy" sx={{ mt: "20px" }} />
       <Box
         mt="20px"
@@ -238,6 +239,7 @@ const Overview = () => {
         </Box>
       </Box>
       <Divider />
+      <br />
       <Header subtitle="Accuracy by Move Number" sx={{ mt: "20px" }} />
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -318,7 +320,9 @@ const Overview = () => {
         </TabPanel>
       </Box>
       <Divider />
+      <br />
       <Header subtitle="Results by opponent rating" sx={{ mt: "20px" }} />
+      <br />
       <Box
         mt="0px"
         mb="20px"

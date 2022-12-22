@@ -15,7 +15,7 @@ const LineChart = ({
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 20, right: 60, bottom: 50, left: 60 }}
+      margin={{ top: 20, right: 80, bottom: 50, left: 80 }}
       theme={{
         axis: {
           domain: {
@@ -77,9 +77,10 @@ const LineChart = ({
         tickPadding: 5,
         tickRotation: 0,
         legend: ylabel,
-        legendOffset: -40,
+        legendOffset: -50,
         legendPosition: "middle",
         tickValues: ytickValues,
+        format: (d) => `${d}%`,
       }}
       pointSize={0}
       //   pointColor={{ theme: "background" }}
@@ -117,7 +118,7 @@ const LineChart = ({
             ]
           : undefined
       }
-      curve="natural"
+      curve="cardinal"
       enableArea={true}
       enableGridX={false}
       enableSlices="x"

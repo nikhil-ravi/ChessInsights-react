@@ -75,7 +75,7 @@ const MyResponsiveBar = ({
         tickRotation: 0,
         legend: ylabel,
         legendPosition: "middle",
-        legendOffset: -40,
+        legendOffset: -50,
         tickValues: 4,
         format: (value) => `${value}%`,
       }}
