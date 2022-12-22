@@ -23,8 +23,8 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/" element={<Navigate to="/overview" replace />} />
+              {/* <Route path="/dashboard" element={<Dashboard />} /> */}
               <Route path="/overview" element={<Overview />} />
               <Route path="/gameresults" element={<GameResults />} />
               <Route path="/gamephases" element={<GamePhases />} />
