@@ -14,6 +14,7 @@ export const api = createApi({
     "GamesByCalendar",
     "AccByCalendar",
     "ResultsByCalendar",
+    "PieceCntAcc",
   ],
   endpoints: (build) => ({
     getYearlyStats: build.query({
@@ -56,6 +57,10 @@ export const api = createApi({
       query: (qType) => `calendar/results/${qType}`,
       providesTags: ["ResultsByCalendar"],
     }),
+    getPieceCntAcc: build.query({
+      query: () => "moves/getpiececntacc",
+      providesTags: ["PieceCntAcc"],
+    }),
   }),
 });
 
@@ -70,4 +75,5 @@ export const {
   useGetGamesByCalendarQuery,
   useGetAccByCalendarQuery,
   useGetResultsByCalendarQuery,
+  useGetPieceCntAccQuery,
 } = api;

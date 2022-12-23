@@ -8,17 +8,24 @@ const MyResponsiveBar = ({
   xlabel,
   ylabel,
   labelFormat = false,
+  labelDecimals = 2,
   maxValue = "auto",
   tooltip,
+  groupMode = "grouped",
+  colors = undefined,
+  legendLabel = undefined,
+  legend = [],
+  padding = 0.01,
 }) => {
   const theme = useTheme();
   return (
     <ResponsiveBar
       data={data}
-      keys={[keys]}
+      keys={keys}
       indexBy={index}
+      groupMode={groupMode}
       margin={{ top: 20, right: 80, bottom: 40, left: 80 }}
-      padding={0.01}
+      padding={padding}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       maxValue={maxValue}
@@ -55,7 +62,10 @@ const MyResponsiveBar = ({
           },
         },
       }}
-      label={labelFormat ? (d) => `${d.value.toFixed(2)}%` : undefined}
+      colors={colors}
+      label={
+        labelFormat ? (d) => `${d.value.toFixed(labelDecimals)}%` : undefined
+      }
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],
@@ -86,8 +96,9 @@ const MyResponsiveBar = ({
         from: "color",
         modifiers: [["darker", 1.6]],
       }}
-      legends={[]}
+      legends={legend}
       tooltip={tooltip}
+      legendLabel={legendLabel}
     />
   );
 };

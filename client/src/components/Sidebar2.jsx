@@ -100,7 +100,7 @@ const navItems = [
   {
     text: "Pieces",
     icon: <PieChartOutlined />,
-    disabled: true,
+    disabled: false,
   },
   {
     text: "Castling",

@@ -1,9 +1,10 @@
-import express from "express";
-import { getAdmins, getUserPerformance } from "../controllers/management.js";
+import Piece from "../models/Piece.js";
 
-const router = express.Router();
-
-router.get("/admins", getAdmins);
-router.get("/performance/:id", getUserPerformance);
-
-export default router;
+export const getPieceCntAcc = async (req, res) => {
+  try {
+    const pieceCntAcc = await Piece.find();
+    res.status(200).json(pieceCntAcc);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};

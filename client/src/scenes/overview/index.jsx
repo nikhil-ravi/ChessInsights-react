@@ -167,7 +167,7 @@ const Overview = () => {
         >
           <MyResponsiveBar
             data={yearlyStats}
-            keys="totalGames"
+            keys={["totalGames"]}
             index="_id"
             xlabel="Year"
             ylabel="Number of Games"
@@ -397,6 +397,55 @@ const Overview = () => {
                 )}
               </div>
             )}
+            defs={[
+              {
+                id: "winpct",
+                type: "patternDots",
+                background: theme.palette.result.win,
+                color: theme.palette.result.win,
+                size: 1,
+                padding: 0,
+                stagger: false,
+              },
+              {
+                id: "drawpct",
+                type: "patternDots",
+                background: theme.palette.result.draw,
+                color: theme.palette.result.draw,
+                size: 1,
+                padding: 0,
+                stagger: false,
+              },
+              {
+                id: "losspct",
+                type: "patternDots",
+                background: theme.palette.result.loss,
+                color: theme.palette.result.loss,
+                size: 1,
+                padding: 0,
+                stagger: false,
+              },
+            ]}
+            fill={[
+              {
+                match: {
+                  id: "winpct",
+                },
+                id: "winpct",
+              },
+              {
+                match: {
+                  id: "drawpct",
+                },
+                id: "drawpct",
+              },
+              {
+                match: {
+                  id: "losspct",
+                },
+                id: "losspct",
+              },
+            ]}
           />
         </Box>
       </Box>

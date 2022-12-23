@@ -6,13 +6,20 @@ const ResultsHistogram = ({
   tooltip,
   leftTickVals = 5,
   bottomLegend,
+  indexBy = "_id",
+  keys = ["winpct", "drawpct", "losspct"],
+  defs,
+  fill,
+  legends = [],
+  legendLabel = undefined,
+  colors = undefined,
 }) => {
   const theme = useTheme();
   return (
     <ResponsiveBar
       data={data}
-      indexBy="_id"
-      keys={["winpct", "drawpct", "losspct"]}
+      indexBy={indexBy}
+      keys={keys}
       offset="expand"
       padding={0.01}
       innerPadding={0}
@@ -37,7 +44,7 @@ const ResultsHistogram = ({
         tickValues: leftTickVals,
         format: (d) => `${d}%`,
       }}
-      margin={{ top: 20, right: 80, bottom: 45, left: 80 }}
+      margin={{ top: 25, right: 80, bottom: 45, left: 80 }}
       theme={{
         axis: {
           domain: {
@@ -76,61 +83,15 @@ const ResultsHistogram = ({
         from: "theme",
         modifiers: [["darker", 0.2]],
       }}
-      defs={[
-        {
-          id: "winpct",
-          type: "patternDots",
-          background: theme.palette.result.win,
-          color: theme.palette.result.win,
-          size: 1,
-          padding: 0,
-          stagger: false,
-        },
-        {
-          id: "drawpct",
-          type: "patternDots",
-          background: theme.palette.result.draw,
-          color: theme.palette.result.draw,
-          size: 1,
-          padding: 0,
-          stagger: false,
-        },
-        {
-          id: "losspct",
-          type: "patternDots",
-          background: theme.palette.result.loss,
-          color: theme.palette.result.loss,
-          size: 1,
-          padding: 0,
-          stagger: false,
-        },
-      ]}
-      //   valueFormat=" >-.2%"
-      fill={[
-        {
-          match: {
-            id: "winpct",
-          },
-          id: "winpct",
-        },
-        {
-          match: {
-            id: "drawpct",
-          },
-          id: "drawpct",
-        },
-        {
-          match: {
-            id: "losspct",
-          },
-          id: "losspct",
-        },
-      ]}
-      legends={[]}
+      defs={defs}
+      fill={fill}
+      legends={legends}
+      legendLabel={legendLabel}
       enableSlices="x"
       valueFormat="> .2f"
       enableLabel={false}
       tooltip={tooltip}
+      colors={colors}
     />
   );
 };

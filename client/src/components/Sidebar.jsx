@@ -14,7 +14,6 @@ import {
   Link,
 } from "@mui/material";
 import {
-  SettingsOutlined,
   ChevronLeftOutlined,
   ChevronRightOutlined,
   CalendarMonthOutlined,

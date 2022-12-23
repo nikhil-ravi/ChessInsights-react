@@ -1,5 +1,13 @@
-import React from "react";
-import { Box, CircularProgress, useTheme } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  CircularProgress,
+  Tab,
+  Tabs,
+  useMediaQuery,
+  useTheme,
+  Tooltip,
+} from "@mui/material";
 import { useGetGeographyQuery } from "state/api";
 import Header from "components/Header";
 import { ResponsiveChoropleth } from "@nivo/geo";
@@ -8,72 +16,22 @@ import getCountryISO3 from "country-iso-2-to-3";
 import Metric from "components/Metric";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
-import { LocationSearchingOutlined } from "@mui/icons-material";
-import PropTypes from "prop-types";
+import {
+  LocationSearchingOutlined,
+  ScoreboardOutlined,
+} from "@mui/icons-material";
 import MarimekkoChart from "components/MarimekkoChart";
-import AnalysisBreakdown from "components/AnalysisBreakdown";
-import { WinIcon } from "components/ResultIcons";
+import { AgrestiCoullLower } from "utils/AgrestiCoull";
+import { TabPanel, a11yProps } from "components/TabUtils";
 
-function Item(props) {
-  const { sx, ...other } = props;
-  return (
-    <Box
-      sx={{
-        p: 1,
-        m: 1,
-        borderRadius: 2,
-        fontSize: "0.875rem",
-        fontWeight: "700",
-        ...sx,
-      }}
-      {...other}
-    />
-  );
-}
-
-Item.propTypes = {
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])
-    ),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-};
-const Geography = () => {
+const MyResponsiveChoropleth = ({ formattedData, domain }) => {
   const theme = useTheme();
-  const { data, isLoading } = useGetGeographyQuery();
-  if (!data || isLoading) return <CircularProgress />;
-  console.log(data);
-
-  const formattedData = data.map((datum) => {
-    return {
-      id: getCountryISO3(datum.Country),
-      value: datum.Total,
-      win: datum.Win,
-      draw: datum.Draw,
-      loss: datum.Loss,
-      winpct: datum.WinPct * 100,
-      drawpct: datum.DrawPct * 100,
-      losspct: datum.LossPct * 100,
-      acc: datum.UserAccuracy,
-    };
-  });
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="Geography" subtitle="List of the opponent locations" />
-      <Box
-        mt="40px"
-        height="75vh"
-        // border={`1px solid ${theme.palette.secondary[200]}`}
-        // borderRadius="4px"
-      >
+      <Box mt="40px" height="75vh">
         <ResponsiveChoropleth
           data={formattedData}
-          colors={"nivo"}
+          colors={"RdYlGn"}
           theme={{
             axis: {
               domain: {
@@ -99,6 +57,7 @@ const Geography = () => {
             legends: {
               text: {
                 fill: theme.palette.secondary[200],
+                fontSize: 15,
               },
             },
             tooltip: {
@@ -109,40 +68,15 @@ const Geography = () => {
           }}
           features={geoData.features}
           margin={{ top: 0, right: 0, bottom: 0, left: -50 }}
-          domain={[0, 1000]}
+          domain={domain}
           unknownColor="#666666"
           label="properties.name"
           valueFormat=".2s"
           projectionScale={150}
-          projectionTranslation={[0.45, 0.6]}
-          projectionRotation={[0, 0, 0]}
+          projectionTranslation={[0.5, 0.5]}
+          projectionRotation={[-4, 0, 0]}
           borderWidth={1.3}
           borderColor="#ffffff"
-          legends={[
-            {
-              anchor: "bottom-right",
-              direction: "column",
-              justify: true,
-              translateX: 20,
-              translateY: -100,
-              itemsSpacing: 0,
-              itemWidth: 94,
-              itemHeight: 18,
-              itemDirection: "left-to-right",
-              // itemTextColor: "#444444",
-              itemOpacity: 0.85,
-              symbolSize: 18,
-              effects: [
-                {
-                  on: "hover",
-                  style: {
-                    itemTextColor: "#000000",
-                    itemOpacity: 1,
-                  },
-                },
-              ],
-            },
-          ]}
           tooltip={({ feature }) => {
             if (!feature.data) return <></>;
             return (
@@ -158,9 +92,9 @@ const Geography = () => {
                     gridTemplateColumns: "repeat(6, 0.5fr)",
                     gap: 0,
                     gridTemplateRows: "auto",
-                    gridTemplateAreas: `" . . label label . ."
-  " . metricGames . . metricAcc . "
-  "  WDLchart WDLchart WDLchart WDLchart WDLchart WDLchart"`,
+                    gridTemplateAreas: `" . . label label label . ."
+  " . metricGames .  metricScore . metricAcc . "
+  "  WDLchart WDLchart WDLchart WDLchart WDLchart WDLchart WDLchart"`,
                     bgcolor: theme.palette.primary.main,
                   }}
                 >
@@ -182,7 +116,20 @@ const Geography = () => {
                   >
                     <Metric
                       icon=<FontAwesomeIcon icon={faChessBoard} size="2x" />
-                      value={feature.data.value}
+                      value={feature.data.total}
+                      valueFontVariant="h3"
+                      p=""
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      gridArea: "metricScore",
+                      bgcolor: theme.palette.primary.main,
+                    }}
+                  >
+                    <Metric
+                      icon=<ScoreboardOutlined sx={{ fontSize: "30px" }} />
+                      value={feature.data.value.toFixed(2)}
                       valueFontVariant="h3"
                       p=""
                     />
@@ -216,6 +163,131 @@ const Geography = () => {
           }}
         />
       </Box>
+    </Box>
+  );
+};
+
+const Geography = () => {
+  const theme = useTheme();
+  // MUI Tab handlers
+  const [value, setValue] = useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const { data, isLoading } = useGetGeographyQuery();
+  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  if (!data || isLoading) return <CircularProgress />;
+
+  const formattedDataFootballScore = data.map((datum) => {
+    return {
+      id: getCountryISO3(datum.Country),
+      value: (datum.Win * 3 + datum.Draw * 1 - datum.Loss * 3) / datum.Total,
+      wl: datum.wl,
+      total: datum.Total,
+      win: datum.Win,
+      draw: datum.Draw,
+      loss: datum.Loss,
+      winpct: datum.WinPct * 100,
+      drawpct: datum.DrawPct * 100,
+      losspct: datum.LossPct * 100,
+      acc: datum.UserAccuracy,
+    };
+  });
+  var minFootballScore = Math.min.apply(
+    Math,
+    formattedDataFootballScore.map(function (o) {
+      return o.value;
+    })
+  );
+  var maxFootballScore = Math.max.apply(
+    Math,
+    formattedDataFootballScore.map(function (o) {
+      return o.value;
+    })
+  );
+  const formattedDataAgrestiCoullLower = data.map((datum) => {
+    return {
+      id: getCountryISO3(datum.Country),
+      value: AgrestiCoullLower({
+        total: datum.Win + datum.Loss,
+        wins: datum.Win,
+      }),
+      wl: datum.wl,
+      total: datum.Total,
+      win: datum.Win,
+      draw: datum.Draw,
+      loss: datum.Loss,
+      winpct: datum.WinPct * 100,
+      drawpct: datum.DrawPct * 100,
+      losspct: datum.LossPct * 100,
+      acc: datum.UserAccuracy,
+    };
+  });
+  var minAgrestiCoullLower = Math.min.apply(
+    Math,
+    formattedDataAgrestiCoullLower.map(function (o) {
+      return o.value;
+    })
+  );
+  var maxAgrestiCoullLower = Math.max.apply(
+    Math,
+    formattedDataAgrestiCoullLower.map(function (o) {
+      return o.value;
+    })
+  );
+
+  return (
+    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Header title="Geography" subtitle="Record against countries." />
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="basic tabs example"
+        centered
+      >
+        <Tab
+          label={
+            <Tooltip title="3 Points for a Win, 1 Point for a Draw, -3 Points for a Loss">
+              <span>Points per Game</span>
+            </Tooltip>
+          }
+          {...a11yProps(0)}
+        />
+        <Tab
+          label={
+            <Tooltip title="Agresti-Coull probability of winning">
+              <span>Agresti-Coull Score</span>
+            </Tooltip>
+          }
+          {...a11yProps(1)}
+        />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <Box
+          gridColumn="span 12"
+          backgroundColor={theme.palette.background.alt}
+          p="1rem"
+          borderRadius="1.55rem"
+        >
+          <MyResponsiveChoropleth
+            formattedData={formattedDataFootballScore}
+            domain={[minFootballScore, maxFootballScore]}
+          />
+        </Box>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Box
+          gridColumn="span 12"
+          backgroundColor={theme.palette.background.alt}
+          p="1rem"
+          borderRadius="1.55rem"
+        >
+          <MyResponsiveChoropleth
+            formattedData={formattedDataAgrestiCoullLower}
+            domain={[minAgrestiCoullLower, maxAgrestiCoullLower]}
+          />
+        </Box>
+      </TabPanel>
     </Box>
   );
 };

@@ -70,6 +70,9 @@ export const Navbar = ({ open, setOpen }) => {
           aria-haspopup="true"
           color="inherit"
           edge="end"
+          sx={{
+            marginRight: 2,
+          }}
         >
           <GitHub
             onClick={() =>

@@ -89,6 +89,11 @@ export const themeSettings = (mode) => {
               loss: "#b23330",
               draw: "#8b8987",
             },
+            gamephase: {
+              opening: "#1b9e77",
+              middlegame: "#d95f02",
+              endgame: "#7570b3",
+            },
           }
         : {
             // palette values for light mode

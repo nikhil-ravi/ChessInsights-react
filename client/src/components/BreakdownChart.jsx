@@ -1,8 +1,19 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, useTheme } from "@mui/material";
+import { LocationSearchingOutlined } from "@mui/icons-material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChessBoard, faChessKnight } from "@fortawesome/free-solid-svg-icons";
+import Parser from "html-react-parser";
 
-const BreakdownChart = ({ data, colors }) => {
+const BreakdownChart = ({
+  data,
+  colors,
+  tooltipName = "Total Games",
+  tooltipValue = "value",
+  id = "id",
+  value = "percentage",
+}) => {
   const theme = useTheme();
   return (
     <Box
@@ -14,7 +25,8 @@ const BreakdownChart = ({ data, colors }) => {
     >
       <ResponsivePie
         data={data}
-        value="percentage"
+        id={id}
+        value={value}
         valueFormat=">-.2%"
         theme={{
           axis: {
@@ -97,18 +109,22 @@ const BreakdownChart = ({ data, colors }) => {
             ],
           },
         ]}
-        tooltip={({ datum }) => (
-          <div
-            style={{
-              padding: 12,
-              background: theme.palette.primary.main,
-            }}
-          >
-            <span>{datum.id}</span>
-            <br />
-            <span>Total Games: {datum.data.value}</span>
-          </div>
-        )}
+        tooltip={({ datum }) => {
+          return (
+            <div
+              style={{
+                padding: 12,
+                background: theme.palette.primary.main,
+              }}
+            >
+              <span>{datum.id}</span>
+              <br />
+              <span>
+                {tooltipName}: {datum.data[tooltipValue]}
+              </span>
+            </div>
+          );
+        }}
       />
     </Box>
   );

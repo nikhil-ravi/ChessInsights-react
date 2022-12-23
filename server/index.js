@@ -8,6 +8,7 @@ import morgan from "morgan";
 import gamesRoutes from "./routes/games.js";
 import geographyRoutes from "./routes/geography.js";
 import calendarRoutes from "./routes/calendar.js";
+import movesRoutes from "./routes/moves.js";
 // import managementRoutes from "./routes/management.js";
 // import salesRoutes from "./routes/sales.js";
 
@@ -36,7 +37,7 @@ app.use(cors());
 app.use("/games", gamesRoutes);
 app.use("/geography", geographyRoutes);
 app.use("/calendar", calendarRoutes);
-// app.use("/sales", salesRoutes);
+app.use("/moves", movesRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.SERVER_PORT || 9000;

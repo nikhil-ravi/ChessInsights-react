@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   CircularProgress,
@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import { useGetGameEndedInQuery } from "state/api";
-import StaggeringBarChart from "./StaggeringBarChart";
 import BreakdownChart from "components/BreakdownChart";
 import SunburstChart from "components/SunburstChart";
 
