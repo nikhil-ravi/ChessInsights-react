@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, useTheme, useMediaQuery } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Header from "components/Header";
@@ -8,7 +8,7 @@ import GamePhaseTabContent from "./GamePhaseTabContent";
 
 const GamePhases = () => {
   const theme = useTheme();
-  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  // const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
 
   // MUI Tab handlers
   const [value, setValue] = useState(0);
@@ -26,10 +26,16 @@ const GamePhases = () => {
           aria-label="basic tabs example"
           centered
         >
-          <Tab label="Overall"
-          style={{ color: theme.palette.secondary[200] }} {...a11yProps(0)} />
-          <Tab label="By Piece Color" 
-          style={{ color: theme.palette.secondary[200] }}{...a11yProps(1)} />
+          <Tab
+            label="Overall"
+            style={{ color: theme.palette.secondary[200] }}
+            {...a11yProps(0)}
+          />
+          <Tab
+            label="By Piece Color"
+            style={{ color: theme.palette.secondary[200] }}
+            {...a11yProps(1)}
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
           <GamePhaseTabContent view={value} />

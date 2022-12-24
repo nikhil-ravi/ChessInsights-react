@@ -10,7 +10,6 @@ import {
 import Header from "components/Header";
 import BreakdownChart from "components/BreakdownChart";
 import ResultsHistogram from "components/ResultsHistogram";
-import Metric from "components/Metric";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
 import FlexBetween from "components/FlexBetween";

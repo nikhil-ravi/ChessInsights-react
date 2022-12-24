@@ -4,7 +4,7 @@ import {
   CircularProgress,
   Tab,
   Tabs,
-  useMediaQuery,
+  // useMediaQuery,
   useTheme,
   Tooltip,
 } from "@mui/material";
@@ -13,7 +13,6 @@ import Header from "components/Header";
 import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoData } from "state/geoData";
 import getCountryISO3 from "country-iso-2-to-3";
-import Metric from "components/Metric";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -23,7 +22,6 @@ import {
 import MarimekkoChart from "components/MarimekkoChart";
 import { AgrestiCoullLower } from "utils/AgrestiCoull";
 import { TabPanel, a11yProps } from "components/TabUtils";
-import FlexBetween from "components/FlexBetween";
 import AnalysisBreakdown from "components/AnalysisBreakdown";
 
 const MyResponsiveChoropleth = ({ formattedData, domain }) => {
@@ -172,7 +170,7 @@ const Geography = () => {
     setValue(newValue);
   };
   const { data, isLoading } = useGetGeographyQuery();
-  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  // const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   if (!data || isLoading) return <CircularProgress />;
 
   const formattedDataFootballScore = data.map((datum) => {
@@ -236,11 +234,7 @@ const Geography = () => {
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
       <Header title="Geography" subtitle="Record against countries." />
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        centered
-      >
+      <Tabs value={value} onChange={handleChange} centered>
         <Tab
           label={
             <Tooltip title="3 Points for a Win, 1 Point for a Draw, -3 Points for a Loss">

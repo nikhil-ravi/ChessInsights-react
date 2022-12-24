@@ -1,10 +1,6 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, useTheme } from "@mui/material";
-import { LocationSearchingOutlined } from "@mui/icons-material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChessBoard, faChessKnight } from "@fortawesome/free-solid-svg-icons";
-import Parser from "html-react-parser";
 
 const BreakdownChart = ({
   data,

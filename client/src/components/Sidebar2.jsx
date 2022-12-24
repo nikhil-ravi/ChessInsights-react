@@ -24,7 +24,7 @@ import {
   SportsScoreOutlined,
   PushPinOutlined,
   TagOutlined,
-  PentagonOutlined,
+  // PentagonOutlined,
   CheckroomOutlined,
   WorkspacePremiumOutlined,
   AccessTimeOutlined,
