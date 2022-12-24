@@ -272,7 +272,6 @@ const Pieces = () => {
             )}
             padding={0.1}
             colors={(datum) => {
-              console.log(datum);
               return theme.palette.gamephase[
                 datum.id.toLowerCase().split("avgacc").slice(1)
               ];

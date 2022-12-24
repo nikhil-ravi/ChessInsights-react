@@ -16,6 +16,22 @@ import BreakdownChart from "components/BreakdownChart";
 import MyResponsiveBar from "components/MyResponsiveBar";
 import ResultsHistogram from "components/ResultsHistogram";
 
+function orderDays(day) {
+  return day === "Sunday"
+    ? 7
+    : day === "Monday"
+    ? 1
+    : day === "Tuesday"
+    ? 2
+    : day === "Wednesday"
+    ? 3
+    : day === "Thursday"
+    ? 4
+    : day === "Friday"
+    ? 5
+    : 6;
+}
+
 const DayOfWeek = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
@@ -38,20 +54,29 @@ const DayOfWeek = () => {
     .map((element) => {
       return {
         ...element,
-        order:
-          element.id === "Sunday"
-            ? 7
-            : element.id === "Monday"
-            ? 1
-            : element.id === "Tuesday"
-            ? 2
-            : element.id === "Wednesday"
-            ? 3
-            : element.id === "Thursday"
-            ? 4
-            : element.id === "Friday"
-            ? 5
-            : 6,
+        order: orderDays(element.id),
+      };
+    })
+    .sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
+
+  const accByDoWwOrder = accByDoW
+    .map((element) => {
+      return {
+        ...element,
+        order: orderDays(element._id),
+      };
+    })
+    .sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
+
+    const resultsByDoWwOrder = resultsByDoW
+    .map((element) => {
+      return {
+        ...element,
+        order: orderDays(element._id),
       };
     })
     .sort((a, b) => {
@@ -120,7 +145,7 @@ const DayOfWeek = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={accByDoW}
+            data={accByDoWwOrder}
             keys={["avgAcc"]}
             index="_id"
             xlabel="Day Of Week"
@@ -170,7 +195,7 @@ const DayOfWeek = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={resultsByDoW}
+            data={resultsByDoWwOrder}
             leftTickVals={5}
             bottomLegend="Day Of Week"
             tooltip={({ data }) => (

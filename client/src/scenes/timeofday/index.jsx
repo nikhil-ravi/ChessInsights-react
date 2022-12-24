@@ -16,6 +16,16 @@ import BreakdownChart from "components/BreakdownChart";
 import MyResponsiveBar from "components/MyResponsiveBar";
 import ResultsHistogram from "components/ResultsHistogram";
 
+function orderToD(tod) {
+  return tod === "Morning"
+    ? 1
+    : tod === "Afternoon"
+    ? 2
+    : tod === "Evening"
+    ? 3
+    : 4;
+}
+
 const TimeOfDay = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
@@ -34,6 +44,39 @@ const TimeOfDay = () => {
     isResultsByToDLoading
   )
     return <CircularProgress />;
+
+  const gamesByToDwOrder = gamesByToD
+    .map((element) => {
+      return {
+        ...element,
+        order: orderToD(element.id),
+      };
+    })
+    .sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
+
+  const accByToDwOrder = accByToD
+    .map((element) => {
+      return {
+        ...element,
+        order: orderToD(element._id),
+      };
+    })
+    .sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
+
+  const resultsByToDwOrder = resultsByToD
+    .map((element) => {
+      return {
+        ...element,
+        order: orderToD(element._id),
+      };
+    })
+    .sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -64,7 +107,7 @@ const TimeOfDay = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={gamesByToD} colors={{ scheme: "nivo" }} />
+          <BreakdownChart data={gamesByToDwOrder} colors={{ scheme: "nivo" }} />
         </Box>
       </Box>
       <Divider />
@@ -94,7 +137,7 @@ const TimeOfDay = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={accByToD}
+            data={accByToDwOrder}
             keys={["avgAcc"]}
             index="_id"
             xlabel="Time of Day"
@@ -144,7 +187,7 @@ const TimeOfDay = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={resultsByToD}
+            data={resultsByToDwOrder}
             leftTickVals={5}
             bottomLegend="Time of Day"
             tooltip={({ data }) => (
