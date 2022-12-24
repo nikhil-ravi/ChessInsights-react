@@ -35,7 +35,10 @@ const ResultsHistogram = ({
     },
   ],
   legendLabel = undefined,
+  bottomTickFormat = undefined,
   colors = undefined,
+  axisTop = undefined,
+  margin = { top: 25, right: 80, bottom: 45, left: 80 },
 }) => {
   const theme = useTheme();
   return (
@@ -55,6 +58,7 @@ const ResultsHistogram = ({
         legend: bottomLegend,
         legendOffset: 36,
         legendPosition: "middle",
+        format: bottomTickFormat,
       }}
       axisLeft={{
         orient: "left",
@@ -67,7 +71,8 @@ const ResultsHistogram = ({
         tickValues: leftTickVals,
         format: (d) => `${d}%`,
       }}
-      margin={{ top: 25, right: 80, bottom: 45, left: 80 }}
+      axisTop={axisTop}
+      margin={margin}
       theme={{
         axis: {
           domain: {

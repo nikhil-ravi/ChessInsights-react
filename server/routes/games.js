@@ -7,6 +7,7 @@ import {
   getOpponentEloResults,
   getTerminationByResult,
   getGameEndedIn,
+  getGameEndStageStats,
   // getTransactions,
   // getGeography,
 } from "../controllers/games.js";
@@ -20,6 +21,7 @@ router.get("/moveaccuracy/:type", getMoveAccuracy);
 router.get("/opponenteloresults", getOpponentEloResults);
 router.get("/terminationbyresult/:result", getTerminationByResult);
 router.get("/gameendedin/:color", getGameEndedIn);
+router.get("/gameendstagestats", getGameEndStageStats);
 // router.get("/transactions", getTransactions);
 // router.get("/geography", getGeography);
 

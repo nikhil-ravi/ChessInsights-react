@@ -1,6 +1,7 @@
 import Game from "../models/Game.js";
 import MoveAccuracy from "../models/MoveAccuracy.js";
 import GameStageInfo from "../models/GameStageInfo.js";
+import GameEndStageStat from "../models/GameEndStageStat.js";
 
 export const getYearlyStats = async (req, res) => {
   try {
@@ -404,6 +405,15 @@ export const getGameEndedIn = async (req, res) => {
           ];
     const gameEndedIn = await GameStageInfo.aggregate(agg_query);
     res.status(200).json(gameEndedIn);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getGameEndStageStats = async (req, res) => {
+  try {
+    const gameEndStageStats = await GameEndStageStat.find();
+    res.status(200).json(gameEndStageStats);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

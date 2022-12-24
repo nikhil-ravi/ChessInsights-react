@@ -17,6 +17,7 @@ export const api = createApi({
     "PieceCntAcc",
     "CastleStage",
     "CastleType",
+    "GameEndStageStats",
   ],
   endpoints: (build) => ({
     getYearlyStats: build.query({
@@ -71,6 +72,10 @@ export const api = createApi({
       query: () => "moves/getcastletype",
       providesTags: ["CastleType"],
     }),
+    getGameEndStageStats: build.query({
+      query: () => "games/gameendstagestats",
+      providesTags: ["GameEndStageStats"],
+    }),
   }),
 });
 
@@ -88,4 +93,5 @@ export const {
   useGetPieceCntAccQuery,
   useGetCastleStageQuery,
   useGetCastleTypeQuery,
+  useGetGameEndStageStatsQuery,
 } = api;
