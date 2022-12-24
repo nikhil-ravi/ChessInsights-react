@@ -15,6 +15,8 @@ export const api = createApi({
     "AccByCalendar",
     "ResultsByCalendar",
     "PieceCntAcc",
+    "CastleStage",
+    "CastleType",
   ],
   endpoints: (build) => ({
     getYearlyStats: build.query({
@@ -61,6 +63,14 @@ export const api = createApi({
       query: () => "moves/getpiececntacc",
       providesTags: ["PieceCntAcc"],
     }),
+    getCastleStage: build.query({
+      query: () => "moves/getcastlestage",
+      providesTags: ["CastleStage"],
+    }),
+    getCastleType: build.query({
+      query: () => "moves/getcastletype",
+      providesTags: ["CastleType"],
+    }),
   }),
 });
 
@@ -76,4 +86,6 @@ export const {
   useGetAccByCalendarQuery,
   useGetResultsByCalendarQuery,
   useGetPieceCntAccQuery,
+  useGetCastleStageQuery,
+  useGetCastleTypeQuery,
 } = api;

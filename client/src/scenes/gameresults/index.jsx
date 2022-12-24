@@ -58,7 +58,10 @@ const GameResults = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={terminationByWin} colors="greens" />
+          <BreakdownChart
+            data={terminationByWin}
+            colors={{ scheme: "greens" }}
+          />
         </Box>
       </Box>
       <Divider />
@@ -87,7 +90,10 @@ const GameResults = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={terminationByDraw} colors="greys" />
+          <BreakdownChart
+            data={terminationByDraw}
+            colors={{ scheme: "greys" }}
+          />
         </Box>
       </Box>
 
@@ -117,7 +123,10 @@ const GameResults = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={terminationByLoss} colors="reds" />
+          <BreakdownChart
+            data={terminationByLoss}
+            colors={{ scheme: "reds" }}
+          />
         </Box>
       </Box>
     </Box>

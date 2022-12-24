@@ -23,6 +23,8 @@ import {
 import MarimekkoChart from "components/MarimekkoChart";
 import { AgrestiCoullLower } from "utils/AgrestiCoull";
 import { TabPanel, a11yProps } from "components/TabUtils";
+import FlexBetween from "components/FlexBetween";
+import AnalysisBreakdown from "components/AnalysisBreakdown";
 
 const MyResponsiveChoropleth = ({ formattedData, domain }) => {
   const theme = useTheme();
@@ -89,12 +91,12 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(6, 0.5fr)",
+                    gridTemplateColumns: "repeat(5, 0.5fr)",
                     gap: 0,
                     gridTemplateRows: "auto",
-                    gridTemplateAreas: `" . . label label label . ."
-  " . metricGames .  metricScore . metricAcc . "
-  "  WDLchart WDLchart WDLchart WDLchart WDLchart WDLchart WDLchart"`,
+                    gridTemplateAreas: `". label label label ."
+  "metricGames .  metricScore . metricAcc"
+  "WDLchart WDLchart WDLchart WDLchart WDLchart"`,
                     bgcolor: theme.palette.primary.main,
                   }}
                 >
@@ -114,11 +116,10 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                       bgcolor: theme.palette.primary.main,
                     }}
                   >
-                    <Metric
-                      icon=<FontAwesomeIcon icon={faChessBoard} size="2x" />
+                    <AnalysisBreakdown
+                      title="Games"
+                      icon={<FontAwesomeIcon icon={faChessBoard} size="2x" />}
                       value={feature.data.total}
-                      valueFontVariant="h3"
-                      p=""
                     />
                   </Box>
                   <Box
@@ -127,11 +128,10 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                       bgcolor: theme.palette.primary.main,
                     }}
                   >
-                    <Metric
-                      icon=<ScoreboardOutlined sx={{ fontSize: "30px" }} />
+                    <AnalysisBreakdown
+                      title="Score"
+                      icon={<ScoreboardOutlined sx={{ fontSize: "30px" }} />}
                       value={feature.data.value.toFixed(2)}
-                      valueFontVariant="h3"
-                      p=""
                     />
                   </Box>
                   <Box
@@ -140,13 +140,10 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                       bgcolor: theme.palette.primary.main,
                     }}
                   >
-                    <Metric
-                      icon=<LocationSearchingOutlined
-                        sx={{ fontSize: "30px" }}
-                      />
+                    <AnalysisBreakdown
+                      title="Accuracy"
+                      icon={<LocationSearchingOutlined />}
                       value={feature.data.acc.toFixed(2)}
-                      valueFontVariant="h3"
-                      p=""
                     />
                   </Box>
                   <Box
@@ -242,7 +239,6 @@ const Geography = () => {
       <Tabs
         value={value}
         onChange={handleChange}
-        aria-label="basic tabs example"
         centered
       >
         <Tab
@@ -251,6 +247,7 @@ const Geography = () => {
               <span>Points per Game</span>
             </Tooltip>
           }
+          style={{ color: theme.palette.secondary[200] }}
           {...a11yProps(0)}
         />
         <Tab
@@ -259,6 +256,7 @@ const Geography = () => {
               <span>Agresti-Coull Score</span>
             </Tooltip>
           }
+          style={{ color: theme.palette.secondary[200] }}
           {...a11yProps(1)}
         />
       </Tabs>

@@ -120,7 +120,6 @@ const Overview = () => {
       data: moveAccuracyBlack,
     },
   ];
-  console.log(opponentEloResults);
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -145,7 +144,7 @@ const Overview = () => {
           borderRadius="1.55rem"
         >
           <Metric
-            icon=<FontAwesomeIcon icon={faChessBoard} size="3x" />
+            icon=<FontAwesomeIcon icon={faChessBoard} size="2x" />
             value={totalGames}
           />
         </Box>
@@ -260,8 +259,16 @@ const Overview = () => {
           aria-label="basic tabs example"
           centered
         >
-          <Tab label="Overall" {...a11yProps(0)} />
-          <Tab label="By Piece Color" {...a11yProps(1)} />
+          <Tab
+            label="Overall"
+            style={{ color: theme.palette.secondary[200] }}
+            {...a11yProps(0)}
+          />
+          <Tab
+            label="By Piece Color"
+            style={{ color: theme.palette.secondary[200] }}
+            {...a11yProps(1)}
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Box
@@ -397,55 +404,15 @@ const Overview = () => {
                 )}
               </div>
             )}
-            defs={[
-              {
-                id: "winpct",
-                type: "patternDots",
-                background: theme.palette.result.win,
-                color: theme.palette.result.win,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-              {
-                id: "drawpct",
-                type: "patternDots",
-                background: theme.palette.result.draw,
-                color: theme.palette.result.draw,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-              {
-                id: "losspct",
-                type: "patternDots",
-                background: theme.palette.result.loss,
-                color: theme.palette.result.loss,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-            ]}
-            fill={[
-              {
-                match: {
-                  id: "winpct",
-                },
-                id: "winpct",
-              },
-              {
-                match: {
-                  id: "drawpct",
-                },
-                id: "drawpct",
-              },
-              {
-                match: {
-                  id: "losspct",
-                },
-                id: "losspct",
-              },
-            ]}
+            colors={(datum) => {
+              return theme.palette.result[
+                datum.id.toLowerCase().split("pct")[0]
+              ];
+            }}
+            legendLabel={(datum) =>
+              `${datum.id.split("pct")[0].charAt(0).toUpperCase()}` +
+              `${datum.id.split("pct")[0].substring(1)}`
+            }
           />
         </Box>
       </Box>

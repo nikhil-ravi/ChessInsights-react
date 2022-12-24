@@ -12,6 +12,7 @@ import Geography from "scenes/geography";
 import TimeOfDay from "scenes/timeofday";
 import DayOfWeek from "scenes/dayofweek";
 import Pieces from "scenes/pieces";
+import Castling from "scenes/castling";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -34,7 +35,7 @@ function App() {
               <Route path="/hangingpieces" element={<HangingPieces />} />
               <Route path="/movequality" element={<MoveQuality />} />*/}
               <Route path="/pieces" element={<Pieces />} />
-              {/* <Route path="/castling" element={<Castling />} /> */}
+              <Route path="/castling" element={<Castling />} />
               <Route path="/timeofday" element={<TimeOfDay />} />
               <Route path="/dayofweek" element={<DayOfWeek />} />
               <Route path="/opponentsmap" element={<Geography />} />

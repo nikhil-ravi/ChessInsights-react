@@ -94,6 +94,12 @@ export const themeSettings = (mode) => {
               middlegame: "#d95f02",
               endgame: "#7570b3",
             },
+            castleStage: {
+              opening: "#1b9e77",
+              middlegame: "#d95f02",
+              endgame: "#7570b3",
+              nocastling: "#e7298a",
+            },
           }
         : {
             // palette values for light mode
@@ -119,6 +125,17 @@ export const themeSettings = (mode) => {
               win: "#85a94e",
               loss: "#b23330",
               draw: "#8b8987",
+            },
+            gamephase: {
+              opening: "#1b9e77",
+              middlegame: "#d95f02",
+              endgame: "#7570b3",
+            },
+            castleStage: {
+              opening: "#1b9e77",
+              middlegame: "#d95f02",
+              endgame: "#7570b3",
+              nocastling: "#e7298a",
             },
           }),
     },

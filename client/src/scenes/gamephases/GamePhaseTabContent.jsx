@@ -77,7 +77,7 @@ const GamePhaseTabContent = ({ view }) => {
           borderRadius="1.55rem"
         >
           {view === 0 ? (
-            <BreakdownChart data={gameEndedInData} colors="nivo" />
+            <BreakdownChart data={gameEndedInData} colors={ {scheme: "nivo"} } />
           ) : (
             <SunburstChart data={formattedData} colors="nivo" />
           )}

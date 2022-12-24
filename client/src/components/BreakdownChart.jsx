@@ -61,9 +61,9 @@ const BreakdownChart = ({
             },
           },
         }}
-        colors={{ scheme: colors }}
+        colors={colors}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-        sortByValue={true}
+        sortByValue={false}
         innerRadius={0.45}
         activeOuterRadiusOffset={8}
         borderWidth={1}
@@ -84,31 +84,7 @@ const BreakdownChart = ({
           modifiers: [["darker", 2]],
         }}
         enableArcLabels={false}
-        legends={[
-          {
-            anchor: "bottom",
-            direction: "row",
-            justify: false,
-            translateX: 0,
-            translateY: 56,
-            itemsSpacing: 30,
-            itemWidth: 85,
-            itemHeight: 18,
-            itemTextColor: "#999",
-            itemDirection: "left-to-right",
-            itemOpacity: 1,
-            symbolSize: 18,
-            symbolShape: "circle",
-            effects: [
-              {
-                on: "hover",
-                style: {
-                  itemTextColor: theme.palette.primary[500],
-                },
-              },
-            ],
-          },
-        ]}
+        legends={[]}
         tooltip={({ datum }) => {
           return (
             <div

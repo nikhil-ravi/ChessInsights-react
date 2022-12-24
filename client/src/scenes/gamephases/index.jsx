@@ -26,8 +26,10 @@ const GamePhases = () => {
           aria-label="basic tabs example"
           centered
         >
-          <Tab label="Overall" {...a11yProps(0)} />
-          <Tab label="By Piece Color" {...a11yProps(1)} />
+          <Tab label="Overall"
+          style={{ color: theme.palette.secondary[200] }} {...a11yProps(0)} />
+          <Tab label="By Piece Color" 
+          style={{ color: theme.palette.secondary[200] }}{...a11yProps(1)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <GamePhaseTabContent view={value} />

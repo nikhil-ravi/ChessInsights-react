@@ -49,11 +49,11 @@ const navItems = [
     icon: <EmojiEventsOutlined />,
     disabled: false,
   },
-  {
-    text: "Game Shapes",
-    icon: <PentagonOutlined />,
-    disabled: true,
-  },
+  // {
+  //   text: "Game Shapes",
+  //   icon: <PentagonOutlined />,
+  //   disabled: true,
+  // },
   {
     text: "Game Phases",
     icon: <SportsScoreOutlined />,
@@ -105,7 +105,7 @@ const navItems = [
   {
     text: "Castling",
     icon: <CastleOutlined />,
-    disabled: true,
+    disabled: false,
   },
   {
     text: "Calendar",

@@ -19,21 +19,44 @@ import ResultsHistogram from "components/ResultsHistogram";
 const DayOfWeek = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data: gamesByToD, isLoading: isGamesByToDLoading } =
+  const { data: gamesByDoW, isLoading: isGamesByDoWLoading } =
     useGetGamesByCalendarQuery("DayOfWeek");
-  const { data: accByToD, isLoading: isAccByToDLoading } =
+  const { data: accByDoW, isLoading: isAccByDoWLoading } =
     useGetAccByCalendarQuery("DayOfWeek");
-  const { data: resultsByToD, isLoading: isResultsByToDLoading } =
+  const { data: resultsByDoW, isLoading: isResultsByDoWLoading } =
     useGetResultsByCalendarQuery("DayOfWeek");
   if (
-    !gamesByToD ||
-    isGamesByToDLoading ||
-    !accByToD ||
-    isAccByToDLoading ||
-    !resultsByToD ||
-    isResultsByToDLoading
+    !gamesByDoW ||
+    isGamesByDoWLoading ||
+    !accByDoW ||
+    isAccByDoWLoading ||
+    !resultsByDoW ||
+    isResultsByDoWLoading
   )
     return <CircularProgress />;
+  const gamesByDoWwOrder = gamesByDoW
+    .map((element) => {
+      return {
+        ...element,
+        order:
+          element.id === "Sunday"
+            ? 7
+            : element.id === "Monday"
+            ? 1
+            : element.id === "Tuesday"
+            ? 2
+            : element.id === "Wednesday"
+            ? 3
+            : element.id === "Thursday"
+            ? 4
+            : element.id === "Friday"
+            ? 5
+            : 6,
+      };
+    })
+    .sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -64,7 +87,10 @@ const DayOfWeek = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={gamesByToD} colors="category10" />
+          <BreakdownChart
+            data={gamesByDoWwOrder}
+            colors={{ scheme: "category10" }}
+          />
         </Box>
       </Box>
       <Divider />
@@ -94,7 +120,7 @@ const DayOfWeek = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={accByToD}
+            data={accByDoW}
             keys={["avgAcc"]}
             index="_id"
             xlabel="Day Of Week"
@@ -144,7 +170,7 @@ const DayOfWeek = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={resultsByToD}
+            data={resultsByDoW}
             leftTickVals={5}
             bottomLegend="Day Of Week"
             tooltip={({ data }) => (
@@ -181,55 +207,15 @@ const DayOfWeek = () => {
                 )}
               </div>
             )}
-            defs={[
-              {
-                id: "winpct",
-                type: "patternDots",
-                background: theme.palette.result.win,
-                color: theme.palette.result.win,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-              {
-                id: "drawpct",
-                type: "patternDots",
-                background: theme.palette.result.draw,
-                color: theme.palette.result.draw,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-              {
-                id: "losspct",
-                type: "patternDots",
-                background: theme.palette.result.loss,
-                color: theme.palette.result.loss,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-            ]}
-            fill={[
-              {
-                match: {
-                  id: "winpct",
-                },
-                id: "winpct",
-              },
-              {
-                match: {
-                  id: "drawpct",
-                },
-                id: "drawpct",
-              },
-              {
-                match: {
-                  id: "losspct",
-                },
-                id: "losspct",
-              },
-            ]}
+            colors={(datum) => {
+              return theme.palette.result[
+                datum.id.toLowerCase().split("pct")[0]
+              ];
+            }}
+            legendLabel={(datum) =>
+              `${datum.id.split("pct")[0].charAt(0).toUpperCase()}` +
+              `${datum.id.split("pct")[0].substring(1)}`
+            }
           />
         </Box>
       </Box>

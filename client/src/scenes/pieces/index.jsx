@@ -10,7 +10,6 @@ import {
 import Header from "components/Header";
 import BreakdownChart from "components/BreakdownChart";
 import MyResponsiveBar from "components/MyResponsiveBar";
-import MyBulletChart from "components/MyBulletChart";
 import ResultsHistogram from "components/ResultsHistogram";
 
 const Pieces = () => {
@@ -19,22 +18,6 @@ const Pieces = () => {
   const { data: pieceCntAcc, isLoading: isPieceCntAccLoading } =
     useGetPieceCntAccQuery();
   if (!pieceCntAcc || isPieceCntAccLoading) return <CircularProgress />;
-  const bulletData = pieceCntAcc.map((datum) => {
-    return {
-      id: datum.Piece,
-      title: datum.Piece,
-      subtitle: datum.Moves,
-      ranges: [
-        0,
-        datum.PercentageOpening,
-        datum.PercentageOpening + datum.PercentageMiddlegame,
-        1,
-      ],
-      measures: [],
-      markers: [],
-      Moves: datum.Moves,
-    };
-  });
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -64,7 +47,7 @@ const Pieces = () => {
         >
           <BreakdownChart
             data={pieceCntAcc}
-            colors="nivo"
+            colors={{ scheme: "nivo" }}
             id="Piece"
             value="Percentage"
             tooltipName="Total Moves"
@@ -151,7 +134,11 @@ const Pieces = () => {
                 )}
               </div>
             )}
-            colors={{ scheme: "dark2" }}
+            colors={(datum) => {
+              return theme.palette.gamephase[
+                datum.id.toLowerCase().split("percentage").slice(1)
+              ];
+            }}
             legendLabel={(datum) => `${datum.id.split("Percentage").slice(1)}`}
             legends={[
               {
@@ -219,7 +206,7 @@ const Pieces = () => {
               <div
                 style={{
                   padding: 12,
-                  background: theme.palette.secondary[200],
+                  background: theme.palette.primary.main,
                 }}
               >
                 <span>{indexValue}</span>
@@ -284,7 +271,12 @@ const Pieces = () => {
               </div>
             )}
             padding={0.1}
-            colors={{ scheme: "dark2" }}
+            colors={(datum) => {
+              console.log(datum);
+              return theme.palette.gamephase[
+                datum.id.toLowerCase().split("avgacc").slice(1)
+              ];
+            }}
             legendLabel={(datum) => `${datum.id.split("AvgAcc").slice(1)}`}
             legend={[
               {

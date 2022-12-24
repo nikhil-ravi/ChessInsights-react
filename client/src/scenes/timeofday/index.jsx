@@ -64,7 +64,7 @@ const TimeOfDay = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={gamesByToD} colors="nivo" />
+          <BreakdownChart data={gamesByToD} colors={{ scheme: "nivo" }} />
         </Box>
       </Box>
       <Divider />
@@ -181,55 +181,15 @@ const TimeOfDay = () => {
                 )}
               </div>
             )}
-            defs={[
-              {
-                id: "winpct",
-                type: "patternDots",
-                background: theme.palette.result.win,
-                color: theme.palette.result.win,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-              {
-                id: "drawpct",
-                type: "patternDots",
-                background: theme.palette.result.draw,
-                color: theme.palette.result.draw,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-              {
-                id: "losspct",
-                type: "patternDots",
-                background: theme.palette.result.loss,
-                color: theme.palette.result.loss,
-                size: 1,
-                padding: 0,
-                stagger: false,
-              },
-            ]}
-            fill={[
-              {
-                match: {
-                  id: "winpct",
-                },
-                id: "winpct",
-              },
-              {
-                match: {
-                  id: "drawpct",
-                },
-                id: "drawpct",
-              },
-              {
-                match: {
-                  id: "losspct",
-                },
-                id: "losspct",
-              },
-            ]}
+            colors={(datum) => {
+              return theme.palette.result[
+                datum.id.toLowerCase().split("pct")[0]
+              ];
+            }}
+            legendLabel={(datum) =>
+              `${datum.id.split("pct")[0].charAt(0).toUpperCase()}` +
+              `${datum.id.split("pct")[0].substring(1)}`
+            }
           />
         </Box>
       </Box>
