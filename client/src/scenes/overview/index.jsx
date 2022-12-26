@@ -170,6 +170,7 @@ const Overview = () => {
             index="_id"
             xlabel="Year"
             ylabel="Number of Games"
+            labelFormat={false}
             tooltip={({ indexValue, value }) => (
               <div
                 style={{
@@ -179,7 +180,7 @@ const Overview = () => {
               >
                 <span>{indexValue}</span>
                 <br />
-                <span>Average Accuracy: {value}</span>
+                <span>Total Games: {value}</span>
               </div>
             )}
           />
