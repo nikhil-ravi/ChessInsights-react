@@ -14,6 +14,7 @@ import {
   useGetResultStatsQuery,
   useGetMoveAccuracyQuery,
   useGetOpponentEloResultsQuery,
+  useGetTotalGamesQuery
 } from "state/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
@@ -27,9 +28,13 @@ import { TabPanel, a11yProps } from "components/TabUtils";
 import LineChart from "components/LineChart";
 import ResultsHistogram from "components/ResultsHistogram";
 import MyResponsiveBar from "components/MyResponsiveBar";
+import { useSelector } from "react-redux";
 
 const Overview = () => {
   const theme = useTheme();
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate);
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
 
   // MUI Tab handlers
@@ -50,7 +55,8 @@ const Overview = () => {
     useGetMoveAccuracyQuery("Black");
   const { data: opponentEloResults, isLoading: isOpponentEloResultsLoading } =
     useGetOpponentEloResultsQuery();
-
+    const { data: totalGamesData, isLoading: isTotalGamesLoading } =
+    useGetTotalGamesQuery({timeclass:timeClass, startdate:startDate, enddate:endDate});
   if (
     !yearlyStats ||
     isYearlyStatsLoading ||
@@ -63,7 +69,9 @@ const Overview = () => {
     !moveAccuracyBlack ||
     isMoveAccuracyBlackLoading ||
     !opponentEloResults ||
-    isOpponentEloResultsLoading
+    isOpponentEloResultsLoading ||
+    !totalGamesData ||
+    isTotalGamesLoading
   )
     return <CircularProgress />;
   const win = resultStats.find((item) => item.result === "Win");
@@ -145,7 +153,7 @@ const Overview = () => {
         >
           <Metric
             icon=<FontAwesomeIcon icon={faChessBoard} size="2x" />
-            value={totalGames}
+            value={totalGamesData[0].Total}
           />
         </Box>
         <Box

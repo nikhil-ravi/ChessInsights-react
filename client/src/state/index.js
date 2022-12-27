@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "dark",
-  userId: "63701cc1f03239b7f700000e",
+  userId: "Honrau7",
+  timeClass: "Rapid",
+  startDate: "2013-01-01",
+  endDate: "2023-01-01",
 };
 
 export const globalSlice = createSlice({
@@ -12,8 +15,15 @@ export const globalSlice = createSlice({
     setMode: (state) => {
       state.mode = state.mode === "light" ? "dark" : "light";
     },
+    setTimeClass: (state, newClass) => {
+      state.timeClass = newClass.payload;
+    },
+    setDates: (state, newStartDate) => {
+      state.startDate = newStartDate.payload.startDate;
+      state.endDate = newStartDate.payload.endDate;
+    },
   },
 });
 
-export const { setMode } = globalSlice.actions;
+export const { setMode, setTimeClass, setDates } = globalSlice.actions;
 export default globalSlice.reducer;

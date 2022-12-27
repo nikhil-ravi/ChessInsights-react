@@ -12,6 +12,8 @@ import {
   // getGeography,
 } from "../controllers/games.js";
 
+import { getTotalGames } from "../supaControllers/games.js";
+
 const router = express.Router();
 
 router.get("/yearlystats", getYearlyStats);
@@ -22,6 +24,7 @@ router.get("/opponenteloresults", getOpponentEloResults);
 router.get("/terminationbyresult/:result", getTerminationByResult);
 router.get("/gameendedin/:color", getGameEndedIn);
 router.get("/gameendstagestats", getGameEndStageStats);
+router.get("/totalgames/:timeclass/:startdate/:enddate", getTotalGames);
 // router.get("/transactions", getTransactions);
 // router.get("/geography", getGeography);
 

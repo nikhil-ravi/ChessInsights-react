@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
@@ -38,6 +39,21 @@ app.use("/games", gamesRoutes);
 app.use("/geography", geographyRoutes);
 app.use("/calendar", calendarRoutes);
 app.use("/moves", movesRoutes);
+
+/* SUPABASE SETUP */
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
+// let { data, error } = await supabase.rpc("getTotalGames", {
+//   enddate: "2024-01-01",
+//   startdate: "2014-01-01",
+//   timeclass: "Bullet",
+// });
+
+// if (error) console.error(error);
+// else console.log(data);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.SERVER_PORT || 9000;
