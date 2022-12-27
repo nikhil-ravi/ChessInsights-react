@@ -80,7 +80,7 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
           tooltip={({ feature }) => {
             if (!feature.data) return <></>;
             return (
-              <div
+              <Box
                 style={{
                   padding: 12,
                   background: theme.palette.primary.main,
@@ -92,7 +92,7 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                     gridTemplateColumns: "repeat(5, 0.5fr)",
                     gap: 0,
                     gridTemplateRows: "auto",
-                    gridTemplateAreas: `". label label label ."
+                    gridTemplateAreas: `". . label . ."
   "metricGames .  metricScore . metricAcc"
   "WDLchart WDLchart WDLchart WDLchart WDLchart"`,
                     bgcolor: theme.palette.primary.main,
@@ -103,10 +103,9 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                       gridArea: "label",
                       bgcolor: theme.palette.primary.main,
                     }}
+                    centered="true"
                   >
-                    <center>
-                      <strong>{feature.label}</strong>
-                    </center>
+                    <strong>{feature.label}</strong>
                   </Box>
                   <Box
                     sx={{
@@ -150,10 +149,13 @@ const MyResponsiveChoropleth = ({ formattedData, domain }) => {
                       bgcolor: theme.palette.primary.main,
                     }}
                   >
-                    <MarimekkoChart chartData={[feature.data]} />
+                    <MarimekkoChart
+                      chartData={[feature.data]}
+                      textVariant={"h5"}
+                    />
                   </Box>
                 </Box>
-              </div>
+              </Box>
             );
           }}
         />

@@ -223,12 +223,24 @@ export default function Sidebar({ open, setOpen, drawerWidth }) {
           {navItems.map(({ text, icon, disabled }, index) => {
             if (!icon && open) {
               return (
-                <>
-                  {index > 1 && <Divider />}
-                  <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
-                    {text}
-                  </Typography>
-                </>
+                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
+                    key={text}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                      backgroundColor: "transparent",
+                      color: theme.palette.primary[100],
+                    }}
+                    disabled={true}
+                  >
+                    <ListItemText
+                      primary={text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
               );
             }
             if (!icon && !open && index > 0) {
@@ -238,6 +250,7 @@ export default function Sidebar({ open, setOpen, drawerWidth }) {
             return (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
+                  key={text}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
@@ -258,6 +271,7 @@ export default function Sidebar({ open, setOpen, drawerWidth }) {
                   disabled={disabled}
                 >
                   <ListItemIcon
+                    key={text}
                     sx={{
                       minWidth: 0,
                       mr: open ? 3 : "auto",

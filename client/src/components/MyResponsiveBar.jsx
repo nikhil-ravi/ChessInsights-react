@@ -64,7 +64,7 @@ const MyResponsiveBar = ({
       }}
       colors={colors}
       label={
-        labelFormat ? (d) => `${d.value.toFixed(labelDecimals)}%` : undefined
+        labelFormat ? (d) => `${d.value.toFixed(labelDecimals)}%` : (d) => `${d.value}`
       }
       borderColor={{
         from: "color",
@@ -88,7 +88,7 @@ const MyResponsiveBar = ({
         legendPosition: "middle",
         legendOffset: -50,
         tickValues: 4,
-        format: (value) => `${value}%`,
+        format: labelFormat ? (value) => `${value}%` : (value) => value,
       }}
       labelSkipWidth={12}
       labelSkipHeight={12}

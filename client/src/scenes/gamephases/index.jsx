@@ -81,8 +81,8 @@ const GamePhases = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Castling"
-        subtitle="Games where you castled in the..."
+        title="Game Phases"
+        subtitle="Games that ended in the..."
         sx={{ mt: "20px" }}
       />
       <Box

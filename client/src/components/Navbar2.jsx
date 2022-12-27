@@ -73,15 +73,14 @@ export const Navbar = ({ open, setOpen }) => {
           sx={{
             marginRight: 2,
           }}
+          onClick={() =>
+            window.open(
+              "https://github.com/nikhil-ravi/ChessInsights-react",
+              "_blank"
+            )
+          }
         >
-          <GitHub
-            onClick={() =>
-              window.open(
-                "https://github.com/nikhil-ravi/ChessInsights-react",
-                "_blank"
-              )
-            }
-          />
+          <GitHub />
         </IconButton>
         <IconButton onClick={() => dispatch(setMode())}>
           {theme.palette.mode === "dark" ? (

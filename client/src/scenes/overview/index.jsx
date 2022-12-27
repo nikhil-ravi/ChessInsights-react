@@ -121,7 +121,7 @@ const Overview = () => {
     },
   ];
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box>
       <Header
         title="Overview"
         subtitle="Overview of general revenue and profit"
@@ -135,7 +135,7 @@ const Overview = () => {
         sx={{
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
         }}
-        mb="20px"
+        // mb="20px"
       >
         <Box
           gridColumn="span 2"
@@ -169,8 +169,9 @@ const Overview = () => {
             keys={["totalGames"]}
             index="_id"
             xlabel="Year"
-            ylabel="Number of Games"
+            ylabel="Total Games"
             labelFormat={false}
+            // maxValue="100"
             tooltip={({ indexValue, value }) => (
               <div
                 style={{
@@ -186,12 +187,14 @@ const Overview = () => {
           />
         </Box>
       </Box>
+      <br />
+
       <Divider />
+
       <br />
       <Header subtitle="Average accuracy" sx={{ mt: "20px" }} />
       <Box
         mt="20px"
-        mb="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
         gridAutoRows="80px"
@@ -199,23 +202,23 @@ const Overview = () => {
         sx={{
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
         }}
-        backgroundColor={theme.palette.background.alt}
-        borderRadius="1.55rem"
-        p="2rem 0rem"
       >
-        {/* <Box gridColumn="span 1" gridRow="span 1" /> */}
-        <Box gridColumn="span 3" gridRow="span 1" ml="5rem">
+        <Box
+          gridColumn="span 2"
+          gridRow="span 1"
+          backgroundColor={theme.palette.background.alt}
+          borderRadius="1.55rem"
+        >
           <Metric
-            icon=<LocationSearchingOutlined sx={{ fontSize: "50px" }} />
+            icon=<LocationSearchingOutlined sx={{ fontSize: "30px" }} />
             value={avgAccOverall.toFixed(2)}
           />
         </Box>
-        <Box gridColumn="span 1" gridRow="span 1" />
         <Box
-          gridColumn="span 7"
+          gridColumn="span 10"
           gridRow="span 1"
           backgroundColor={theme.palette.background.alt}
-          p="-10rem 14rem"
+          p="0rem"
           borderRadius="1.55rem"
         >
           <FlexBetween>
@@ -250,6 +253,7 @@ const Overview = () => {
           />
         </Box>
       </Box>
+      <br />
       <Divider />
       <br />
       <Header subtitle="Accuracy by Move Number" sx={{ mt: "20px" }} />
@@ -339,7 +343,6 @@ const Overview = () => {
           </Box>
         </TabPanel>
       </Box>
-      <Divider />
       <br />
       <Header subtitle="Results by opponent rating" sx={{ mt: "20px" }} />
       <br />
@@ -369,7 +372,7 @@ const Overview = () => {
           <ResultsHistogram
             data={opponentEloResults}
             bottomLegend="Opponent Rating"
-            tooltip={({ id, value, color, data }) => (
+            tooltip={({ data }) => (
               <div
                 style={{
                   padding: 12,
@@ -377,7 +380,7 @@ const Overview = () => {
                 }}
               >
                 <span>
-                  {data._id}-{data._id + 100}
+                  {data._id} - {data._id + 100}
                 </span>
                 {data.win && (
                   <>
@@ -410,14 +413,9 @@ const Overview = () => {
                 datum.id.toLowerCase().split("pct")[0]
               ];
             }}
-            legendLabel={(datum) =>
-              `${datum.id.split("pct")[0].charAt(0).toUpperCase()}` +
-              `${datum.id.split("pct")[0].substring(1)}`
-            }
           />
         </Box>
       </Box>
-      <Divider />
     </Box>
   );
 };
