@@ -4,20 +4,6 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
   tagTypes: [
-    "YearlyStats",
-    "ResultStats",
-    "MoveAccuracy",
-    "OpponentEloResults",
-    "TerminationByResult",
-    "GameEndedIn",
-    "Geography",
-    "GamesByCalendar",
-    "AccByCalendar",
-    "ResultsByCalendar",
-    "PieceCntAcc",
-    "CastleStage",
-    "CastleType",
-    "GameEndStageStats",
     // SUPA TAGS
     "TotalGames",
     "GamesByResult",
@@ -35,38 +21,6 @@ export const api = createApi({
     "GeographyStats",
   ],
   endpoints: (build) => ({
-    getGeography: build.query({
-      query: () => "geography/geography",
-      providesTags: ["Geography"],
-    }),
-    getGamesByCalendar: build.query({
-      query: (qType) => `calendar/games/${qType}`,
-      providesTags: ["GamesByCalendar"],
-    }),
-    getAccByCalendar: build.query({
-      query: (qType) => `calendar/accuracy/${qType}`,
-      providesTags: ["AccByCalendar"],
-    }),
-    getResultsByCalendar: build.query({
-      query: (qType) => `calendar/results/${qType}`,
-      providesTags: ["ResultsByCalendar"],
-    }),
-    getPieceCntAcc: build.query({
-      query: () => "moves/getpiececntacc",
-      providesTags: ["PieceCntAcc"],
-    }),
-    getCastleStage: build.query({
-      query: () => "moves/getcastlestage",
-      providesTags: ["CastleStage"],
-    }),
-    getCastleType: build.query({
-      query: () => "moves/getcastletype",
-      providesTags: ["CastleType"],
-    }),
-    getGameEndStageStats: build.query({
-      query: () => "games/gameendstagestats",
-      providesTags: ["GameEndStageStats"],
-    }),
     /* SUPA ENDPOINTS */
     // GAMES
     getTotalGames: build.query({
@@ -149,20 +103,6 @@ export const api = createApi({
 });
 
 export const {
-  useGetYearlyStatsQuery,
-  useGetResultStatsQuery,
-  useGetMoveAccuracyQuery,
-  useGetOpponentEloResultsQuery,
-  useGetTerminationByResultQuery,
-  useGetGameEndedInQuery,
-  useGetGeographyQuery,
-  useGetGamesByCalendarQuery,
-  useGetAccByCalendarQuery,
-  useGetResultsByCalendarQuery,
-  useGetPieceCntAccQuery,
-  useGetCastleStageQuery,
-  useGetCastleTypeQuery,
-  useGetGameEndStageStatsQuery,
   /* SUPA */
   // Games
   useGetTotalGamesQuery,

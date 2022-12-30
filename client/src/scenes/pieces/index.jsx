@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetPieceCntAccQuery, useGetPieceStatsQuery } from "state/api";
+import { useGetPieceStatsQuery } from "state/api";
 import {
   Box,
   CircularProgress,
@@ -35,15 +35,7 @@ const Pieces = () => {
   };
   const { data: pieceStats, isLoading: isPieceStatsLoading } =
     useGetPieceStatsQuery(supa_data);
-  const { data: pieceCntAcc, isLoading: isPieceCntAccLoading } =
-    useGetPieceCntAccQuery();
-  if (
-    !pieceCntAcc ||
-    isPieceCntAccLoading ||
-    !pieceStats ||
-    isPieceStatsLoading
-  )
-    return <CircularProgress />;
+  if (!pieceStats || isPieceStatsLoading) return <CircularProgress />;
   const formattedData = pieceStats.map((item) => ({
     ...item,
     Piece: pieceAlias[item.Piece],
