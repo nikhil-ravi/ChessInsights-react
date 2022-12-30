@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useGetTerminationByResultQuery } from "state/api";
+import React from "react";
+import { useGetGameByTerminationandResultsQuery } from "state/api";
 import {
   Box,
   CircularProgress,
@@ -9,25 +9,43 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import BreakdownChart from "components/BreakdownChart";
+import { useSelector } from "react-redux";
 
 const GameResults = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data: terminationByWin, isLoading: isTerminationByWinLoading } =
-    useGetTerminationByResultQuery("Win");
-  const { data: terminationByDraw, isLoading: isTerminationByDrawLoading } =
-    useGetTerminationByResultQuery("Draw");
-  const { data: terminationByLoss, isLoading: isTerminationByLossLoading } =
-    useGetTerminationByResultQuery("Loss");
-  if (
-    !terminationByWin ||
-    isTerminationByWinLoading ||
-    !terminationByDraw ||
-    isTerminationByDrawLoading ||
-    !terminationByLoss ||
-    isTerminationByLossLoading
-  )
-    return <CircularProgress />;
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate);
+
+  // SUPA DATA
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
+  };
+  const {
+    data: gameByTerminationandResults,
+    isLoading: isGameByTerminationandResultsLoading,
+  } = useGetGameByTerminationandResultsQuery(supa_data);
+  if (isGameByTerminationandResultsLoading) return <CircularProgress />;
+  if (!gameByTerminationandResults)
+    return (
+      <Header
+        title="No games in this date range"
+        subtitle="Please choose a different date range and time class combination."
+        sx={{ mt: "20px" }}
+      />
+    );
+  const win = gameByTerminationandResults
+    ? gameByTerminationandResults.filter((item) => item.Result === "Win")
+    : [{}];
+  const draw = gameByTerminationandResults
+    ? gameByTerminationandResults.filter((item) => item.Result === "Draw")
+    : [{}];
+  const loss = gameByTerminationandResults
+    ? gameByTerminationandResults.filter((item) => item.Result === "Loss")
+    : [{}];
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -59,8 +77,11 @@ const GameResults = () => {
           borderRadius="1.55rem"
         >
           <BreakdownChart
-            data={terminationByWin}
             colors={{ scheme: "greens" }}
+            data={win}
+            tooltipValue="Total"
+            id="Termination"
+            value="Percentage"
           />
         </Box>
       </Box>
@@ -91,7 +112,10 @@ const GameResults = () => {
           borderRadius="1.55rem"
         >
           <BreakdownChart
-            data={terminationByDraw}
+            data={draw}
+            tooltipValue="Total"
+            id="Termination"
+            value="Percentage"
             colors={{ scheme: "greys" }}
           />
         </Box>
@@ -124,7 +148,10 @@ const GameResults = () => {
           borderRadius="1.55rem"
         >
           <BreakdownChart
-            data={terminationByLoss}
+            data={loss}
+            tooltipValue="Total"
+            id="Termination"
+            value="Percentage"
             colors={{ scheme: "reds" }}
           />
         </Box>

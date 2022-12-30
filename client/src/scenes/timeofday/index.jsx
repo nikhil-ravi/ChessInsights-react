@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  useGetGamesByCalendarQuery,
-  useGetAccByCalendarQuery,
-  useGetResultsByCalendarQuery,
-} from "state/api";
+import { useGetTimeOfDayStatsQuery } from "state/api";
 import {
   Box,
   CircularProgress,
@@ -15,68 +11,22 @@ import Header from "components/Header";
 import BreakdownChart from "components/BreakdownChart";
 import MyResponsiveBar from "components/MyResponsiveBar";
 import ResultsHistogram from "components/ResultsHistogram";
-
-function orderToD(tod) {
-  return tod === "Morning"
-    ? 1
-    : tod === "Afternoon"
-    ? 2
-    : tod === "Evening"
-    ? 3
-    : 4;
-}
+import { useSelector } from "react-redux";
 
 const TimeOfDay = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data: gamesByToD, isLoading: isGamesByToDLoading } =
-    useGetGamesByCalendarQuery("TimeOfDay");
-  const { data: accByToD, isLoading: isAccByToDLoading } =
-    useGetAccByCalendarQuery("TimeOfDay");
-  const { data: resultsByToD, isLoading: isResultsByToDLoading } =
-    useGetResultsByCalendarQuery("TimeOfDay");
-  if (
-    !gamesByToD ||
-    isGamesByToDLoading ||
-    !accByToD ||
-    isAccByToDLoading ||
-    !resultsByToD ||
-    isResultsByToDLoading
-  )
-    return <CircularProgress />;
-
-  const gamesByToDwOrder = gamesByToD
-    .map((element) => {
-      return {
-        ...element,
-        order: orderToD(element.id),
-      };
-    })
-    .sort((a, b) => {
-      return a.order < b.order ? -1 : 1;
-    });
-
-  const accByToDwOrder = accByToD
-    .map((element) => {
-      return {
-        ...element,
-        order: orderToD(element._id),
-      };
-    })
-    .sort((a, b) => {
-      return a.order < b.order ? -1 : 1;
-    });
-
-  const resultsByToDwOrder = resultsByToD
-    .map((element) => {
-      return {
-        ...element,
-        order: orderToD(element._id),
-      };
-    })
-    .sort((a, b) => {
-      return a.order < b.order ? -1 : 1;
-    });
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate); // SUPA DATA
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
+  };
+  const { data: todStats, isLoading: isTodStatsLoading } =
+    useGetTimeOfDayStatsQuery(supa_data);
+  if (!todStats || isTodStatsLoading) return <CircularProgress />;
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -107,7 +57,15 @@ const TimeOfDay = () => {
           p="1rem"
           borderRadius="1.55rem"
         >
-          <BreakdownChart data={gamesByToDwOrder} colors={{ scheme: "nivo" }} />
+          <BreakdownChart
+            data={todStats}
+            colors={{ scheme: "nivo" }}
+            id="TimeOfDay"
+            value="Percentage"
+            tooltipName="Total Games"
+            tooltipValue="Total"
+            arcLinkLabel={(d) => `${d.id}: ${d.value}`}
+          />
         </Box>
       </Box>
       <Divider />
@@ -137,9 +95,9 @@ const TimeOfDay = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={accByToDwOrder}
-            keys={["avgAcc"]}
-            index="_id"
+            data={todStats}
+            keys={["Accuracy"]}
+            index="TimeOfDay"
             xlabel="Time of Day"
             ylabel="Average Accuracy"
             labelFormat={true}
@@ -187,7 +145,15 @@ const TimeOfDay = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={resultsByToDwOrder}
+            data={todStats.map((item) => ({
+              _id: item.TimeOfDay,
+              win: item.WinTotal,
+              draw: item.DrawTotal,
+              loss: item.LossTotal,
+              winpct: item.WinPercentage * 100,
+              drawpct: item.DrawPercentage * 100,
+              losspct: item.LossPercentage * 100,
+            }))}
             leftTickVals={5}
             bottomLegend="Time of Day"
             tooltip={({ data }) => (

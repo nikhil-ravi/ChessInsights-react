@@ -1,21 +1,12 @@
-import Geography from "../models/Geography.js";
+import supabase from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
-export const getGeography = async (req, res) => {
-  try {
-    const geography = await Geography.aggregate([
-      {
-        $addFields: {
-          wl: {
-            $subtract: [
-              { $multiply: ["$WinPct", 100] },
-              { $multiply: ["$LossPct", 100] },
-            ],
-          },
-        },
-      },
-    ]);
-    res.status(200).json(geography);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+export const getGeographyStats = async (req, res) => {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY
+  );
+  let { data, error } = await supabase.rpc("getGeography", req.params);
+  if (error) res.status(404).json({ message: error.message });
+  else res.status(200).json(data);
 };

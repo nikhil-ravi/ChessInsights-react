@@ -4,11 +4,11 @@ import {
   CircularProgress,
   Tab,
   Tabs,
-  // useMediaQuery,
+  useMediaQuery,
   useTheme,
   Tooltip,
 } from "@mui/material";
-import { useGetGeographyQuery } from "state/api";
+import { useGetGeographyStatsQuery } from "state/api";
 import Header from "components/Header";
 import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoData } from "state/geoData";
@@ -23,6 +23,7 @@ import MarimekkoChart from "components/MarimekkoChart";
 import { AgrestiCoullLower } from "utils/AgrestiCoull";
 import { TabPanel, a11yProps } from "components/TabUtils";
 import AnalysisBreakdown from "components/AnalysisBreakdown";
+import { useSelector } from "react-redux";
 
 const MyResponsiveChoropleth = ({ formattedData, domain }) => {
   const theme = useTheme();
@@ -168,18 +169,27 @@ const Geography = () => {
   const theme = useTheme();
   // MUI Tab handlers
   const [value, setValue] = useState(0);
+  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const { data, isLoading } = useGetGeographyQuery();
-  // const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  if (!data || isLoading) return <CircularProgress />;
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate); // SUPA DATA
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
+  };
+  const { data: geographyStats, isLoading: isGeographyStatsLoading } =
+    useGetGeographyStatsQuery(supa_data);
+  if (!geographyStats || isGeographyStatsLoading) return <CircularProgress />;
+  console.log(geographyStats);
 
-  const formattedDataFootballScore = data.map((datum) => {
+  const formattedDataFootballScore = geographyStats.map((datum) => {
     return {
       id: getCountryISO3(datum.Country),
       value: (datum.Win * 3 + datum.Draw * 1 - datum.Loss * 3) / datum.Total,
-      wl: datum.wl,
       total: datum.Total,
       win: datum.Win,
       draw: datum.Draw,
@@ -187,7 +197,7 @@ const Geography = () => {
       winpct: datum.WinPct * 100,
       drawpct: datum.DrawPct * 100,
       losspct: datum.LossPct * 100,
-      acc: datum.UserAccuracy,
+      acc: datum.Accuracy,
     };
   });
   var minFootballScore = Math.min.apply(
@@ -202,14 +212,13 @@ const Geography = () => {
       return o.value;
     })
   );
-  const formattedDataAgrestiCoullLower = data.map((datum) => {
+  const formattedDataAgrestiCoullLower = geographyStats.map((datum) => {
     return {
       id: getCountryISO3(datum.Country),
       value: AgrestiCoullLower({
         total: datum.Win + datum.Loss,
         wins: datum.Win,
       }),
-      wl: datum.wl,
       total: datum.Total,
       win: datum.Win,
       draw: datum.Draw,
@@ -217,7 +226,7 @@ const Geography = () => {
       winpct: datum.WinPct * 100,
       drawpct: datum.DrawPct * 100,
       losspct: datum.LossPct * 100,
-      acc: datum.UserAccuracy,
+      acc: datum.Accuracy,
     };
   });
   var minAgrestiCoullLower = Math.min.apply(

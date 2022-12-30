@@ -9,8 +9,10 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.114",
     "@mui/material": "^5.11.0",
     "@mui/x-data-grid": "^5.17.16",
+    "@mui/x-date-pickers-pro": "^5.0.12",
     "@nivo/bar": "^0.80.0",
     "@nivo/bullet": "^0.80.0",
     "@nivo/core": "^0.80.0",
@@ -26,6 +28,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "country-iso-2-to-3": "^1.1.0",
+    "dayjs": "^1.11.7",
     "html-react-parser": "^3.0.4",
     "react": "^18.2.0",
     "react-date-range": "^1.4.0",
@@ -34,6 +37,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.5.0",
     "react-scripts": "5.0.1",
+    "rsuite": "^5.23.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

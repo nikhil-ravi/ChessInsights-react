@@ -19,8 +19,8 @@ export const globalSlice = createSlice({
       state.timeClass = newClass.payload;
     },
     setDates: (state, newStartDate) => {
-      state.startDate = newStartDate.payload.startDate;
-      state.endDate = newStartDate.payload.endDate;
+      state.startDate = newStartDate.payload[0];
+      state.endDate = newStartDate.payload[1];
     },
   },
 });

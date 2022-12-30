@@ -102,7 +102,8 @@ const ResultsHistogram = ({
         },
         tooltip: {
           container: {
-            color: theme.palette.primary.main,
+            color: theme.palette.secondary[200],
+            background: theme.palette.primary.main,
           },
         },
       }}

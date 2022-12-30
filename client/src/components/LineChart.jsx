@@ -5,11 +5,23 @@ const LineChart = ({
   data,
   xlabel,
   ylabel,
+  xScale = { type: "point" },
   xtickValues = null,
   ytickValues = 5,
   ymin = 0,
   ymax = 100,
   legend = false,
+  xFormat = undefined,
+  axisBottom = {
+    orient: "bottom",
+    tickSize: 5,
+    tickPadding: 5,
+    tickRotation: 0,
+    legend: xlabel,
+    legendOffset: 36,
+    legendPosition: "middle",
+    tickValues: xtickValues,
+  },
 }) => {
   const theme = useTheme();
   return (
@@ -45,12 +57,14 @@ const LineChart = ({
         },
         tooltip: {
           container: {
-            color: theme.palette.primary.main,
+            color: theme.palette.secondary[200],
+            background: theme.palette.primary.main,
           },
         },
       }}
       //   colors={datumColor ? { datum: "data.color" } : undefined}
-      xScale={{ type: "point" }}
+      xScale={xScale}
+      xFormat={xFormat}
       yScale={{
         type: "linear",
         min: ymin,
@@ -61,16 +75,7 @@ const LineChart = ({
       yFormat=" >-.2f"
       axisTop={null}
       axisRight={null}
-      axisBottom={{
-        orient: "bottom",
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: xlabel,
-        legendOffset: 36,
-        legendPosition: "middle",
-        tickValues: xtickValues,
-      }}
+      axisBottom={axisBottom}
       axisLeft={{
         orient: "left",
         tickSize: 5,
@@ -118,7 +123,7 @@ const LineChart = ({
             ]
           : undefined
       }
-      curve="cardinal"
+      curve="linear"
       enableArea={true}
       enableGridX={false}
       enableSlices="x"

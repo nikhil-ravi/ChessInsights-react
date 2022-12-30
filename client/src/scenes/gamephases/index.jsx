@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetGameEndStageStatsQuery } from "state/api";
+import { useGetGamePhasesQuery } from "state/api";
 import {
   Box,
   CircularProgress,
@@ -11,63 +11,65 @@ import Header from "components/Header";
 import BreakdownChart from "components/BreakdownChart";
 import ResultsHistogram from "components/ResultsHistogram";
 import MyResponsiveBar from "components/MyResponsiveBar";
+import { useSelector } from "react-redux";
 
-function orderGamePhase(phase) {
-  return phase === "Opening" ? 1 : phase === "Middlegame" ? 2 : 3;
-}
 
 const GamePhases = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data: gameEndStageStats, isLoading: isGameEndStageStatsLoading } =
-    useGetGameEndStageStatsQuery();
-  if (!gameEndStageStats || isGameEndStageStatsLoading)
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate);
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
+  };
+  const { data: gamePhases, isLoading: isGamePhasesLoading } =
+    useGetGamePhasesQuery(supa_data);
+  if (
+    !gamePhases ||
+    isGamePhasesLoading
+  )
     return <CircularProgress />;
-  const gameEndStageStatswOrder = gameEndStageStats
-    .map((element) => {
-      return {
-        ...element,
-        order: orderGamePhase(element.id),
-      };
-    })
-    .sort((a, b) => {
-      return a.order < b.order ? 1 : -1;
-    });
-  const formattedData = gameEndStageStatswOrder
+  
+
+  const formattedData = gamePhases
     .map((datum) => {
       return [
         {
-          GameEndStageByColor: datum.GameEndedIn + " - White",
-          Total: datum.WhiteTotal,
-          Accuracy: datum.WhiteAccuracy,
-          Win: datum.WhiteWin,
-          Draw: datum.WhiteDraw,
-          Loss: datum.WhiteLoss,
-          WinPercentage: datum.WhiteWinPercentage,
-          DrawPercentage: datum.WhiteDrawPercentage,
-          LossPercentage: datum.WhiteLossPercentage,
+          GameEndStageByColor: datum.GameEndInStage + " - White",
+          Total: datum.whiteTotal,
+          Accuracy: datum.whiteAccuracy,
+          Win: datum.whiteWinTotal,
+          Draw: datum.whiteDrawTotal,
+          Loss: datum.whiteLossTotal,
+          WinPercentage: datum.whiteWinPercentage,
+          DrawPercentage: datum.whiteDrawPercentage,
+          LossPercentage: datum.whiteLossPercentage,
         },
         {
-          GameEndStageByColor: datum.GameEndedIn + " - Black",
-          Total: datum.BlackTotal,
-          Accuracy: datum.BlackAccuracy,
-          Win: datum.BlackWin,
-          Draw: datum.BlackDraw,
-          Loss: datum.BlackLoss,
-          WinPercentage: datum.BlackWinPercentage,
-          DrawPercentage: datum.BlackDrawPercentage,
-          LossPercentage: datum.BlackLossPercentage,
+          GameEndStageByColor: datum.GameEndInStage + " - Black",
+          Total: datum.blackTotal,
+          Accuracy: datum.blackAccuracy,
+          Win: datum.blackWinTotal,
+          Draw: datum.blackDrawTotal,
+          Loss: datum.blackLossTotal,
+          WinPercentage: datum.blackWinPercentage,
+          DrawPercentage: datum.blackDrawPercentage,
+          LossPercentage: datum.blackLossPercentage,
         },
       ];
     })
     .flat(1);
-  const userColorData = ["White", "Black"].map((color) => {
-    return gameEndStageStatswOrder
+  const gamePhasesColorData = ["White", "Black"].map((color) => {
+    return gamePhases
       .map((datum) => {
         return {
           UserColor: color,
-          ["Moves" + datum.GameEndedIn]: datum[`${color}Total`],
-          ["Percentage" + datum.GameEndedIn]: datum[`${color}Percentage`],
+          [datum.GameEndInStage]: datum[`${color.toLowerCase()}Total`],
+          ["Percentage" + datum.GameEndInStage]:
+            datum[`${color.toLowerCase()}Percentage`],
         };
       })
       .reduce(
@@ -109,11 +111,11 @@ const GamePhases = () => {
           borderRadius="1.55rem"
         >
           <BreakdownChart
-            data={gameEndStageStatswOrder}
+            data={gamePhases}
             colors={(datum) => {
               return theme.palette.gamephase[datum.id.toLowerCase()];
             }}
-            id="GameEndedIn"
+            id="GameEndInStage"
             value="Percentage"
             tooltipName="Total Games"
             tooltipValue="Total"
@@ -149,9 +151,9 @@ const GamePhases = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={gameEndStageStatswOrder}
+            data={gamePhases}
             keys={["Accuracy"]}
-            index="GameEndedIn"
+            index="GameEndInStage"
             xlabel="For moves in the..."
             ylabel="Average Accuracy"
             labelFormat={true}
@@ -202,14 +204,14 @@ const GamePhases = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={gameEndStageStatswOrder.map((d) => ({
+            data={gamePhases.map((d) => ({
               ...d,
-              WinPercentage: d.WinPercentage * 100,
-              DrawPercentage: d.DrawPercentage * 100,
-              LossPercentage: d.LossPercentage * 100,
+              winPercentage: d.winPercentage * 100,
+              drawPercentage: d.drawPercentage * 100,
+              lossPercentage: d.lossPercentage * 100,
             }))}
-            indexBy="GameEndedIn"
-            keys={["WinPercentage", "DrawPercentage", "LossPercentage"]}
+            indexBy="GameEndInStage"
+            keys={["winPercentage", "drawPercentage", "lossPercentage"]}
             bottomLegend="Game ended in"
             tooltip={({ data }) => (
               <div
@@ -218,28 +220,28 @@ const GamePhases = () => {
                   background: theme.palette.primary.main,
                 }}
               >
-                <span>{data.GameEndedIn}</span>
-                {data.Win && (
+                <span>{data.GameEndInStage}</span>
+                {data.winTotal && (
                   <>
                     <br />
                     <strong>
-                      Win: {data.WinPercentage.toFixed(2)}% ({data.Win})
+                      Win: {data.winPercentage.toFixed(2)}% ({data.winTotal})
                     </strong>
                   </>
                 )}
-                {data.Draw && (
+                {data.drawTotal && (
                   <>
                     <br />
                     <strong>
-                      Draw: {data.DrawPercentage.toFixed(2)}% ({data.Draw})
+                      Draw: {data.drawPercentage.toFixed(2)}% ({data.drawTotal})
                     </strong>
                   </>
                 )}
-                {data.Loss && (
+                {data.lossTotal && (
                   <>
                     <br />
                     <strong>
-                      Loss: {data.LossPercentage.toFixed(2)}% ({data.Loss})
+                      Loss: {data.lossPercentage.toFixed(2)}% ({data.lossTotal})
                     </strong>
                   </>
                 )}
@@ -250,7 +252,11 @@ const GamePhases = () => {
                 datum.id.toLowerCase().split("percentage")[0]
               ];
             }}
-            legendLabel={(datum) => `${datum.id.split("Percentage")[0]}`}
+            legendLabel={(datum) => {
+              const word = datum.id.split("Percentage")[0];
+              const capitalized = word.charAt(0).toUpperCase() + word.slice(1);
+              return `${capitalized}`;
+            }}
           />
         </Box>
       </Box>
@@ -282,7 +288,7 @@ const GamePhases = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={userColorData.map((d) => ({
+            data={gamePhasesColorData.map((d) => ({
               ...d,
               PercentageOpening: d.PercentageOpening * 100,
               PercentageMiddlegame: d.PercentageMiddlegame * 100,
@@ -303,30 +309,30 @@ const GamePhases = () => {
                 }}
               >
                 <span>{data.UserColor}</span>
-                {data.MovesOpening && (
+                {data.Opening && (
                   <>
                     <br />
                     <strong>
                       Opening: {data.PercentageOpening.toFixed(2)}% (
-                      {data.MovesOpening})
+                      {data.Opening})
                     </strong>
                   </>
                 )}
-                {data.MovesMiddlegame && (
+                {data.Middlegame && (
                   <>
                     <br />
                     <strong>
                       Middlegame: {data.PercentageMiddlegame.toFixed(2)}% (
-                      {data.MovesMiddlegame})
+                      {data.Middlegame})
                     </strong>
                   </>
                 )}
-                {data.MovesEndgame && (
+                {data.Endgame && (
                   <>
                     <br />
                     <strong>
                       Endgame: {data.PercentageEndgame.toFixed(2)}% (
-                      {data.MovesEndgame})
+                      {data.Endgame})
                     </strong>
                   </>
                 )}
@@ -396,9 +402,9 @@ const GamePhases = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={gameEndStageStatswOrder}
-            keys={["WhiteAccuracy", "BlackAccuracy"]}
-            index="GameEndedIn"
+            data={gamePhases}
+            keys={["whiteAccuracy", "blackAccuracy"]}
+            index="GameEndInStage"
             xlabel="Game ended in"
             ylabel="Average Accuracy"
             labelFormat={true}
@@ -413,10 +419,41 @@ const GamePhases = () => {
                 <span>{indexValue}</span>
                 <br />
                 <span>
-                  {id.split("Accuracy")[0]} Accuracy: {value.toFixed(2)}%
+                  {id === "whiteAccuracy" ? "White Accuracy" : "Black Accuracy"}
+                  : {value.toFixed(2)}%
                 </span>
               </div>
             )}
+            legend={[
+              {
+                dataFrom: "keys",
+                anchor: "top",
+                direction: "row",
+                justify: false,
+                translateX: 25,
+                translateY: -22,
+                itemsSpacing: 2,
+                itemWidth: 100,
+                itemHeight: 20,
+                itemDirection: "left-to-right",
+                itemOpacity: 0.85,
+                symbolSize: 20,
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemOpacity: 1,
+                    },
+                  },
+                ],
+              },
+            ]}
+            legendLabel={(datum) =>
+              `${datum.id === "whiteAccuracy" ? "White" : "Black"}`
+            }
+            colors={(datum) =>
+              `${datum.id === "whiteAccuracy" ? "#ddac67" : "#382d1c"}`
+            }
           />
         </Box>
       </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   CircularProgress,
@@ -6,15 +6,15 @@ import {
   useMediaQuery,
   Divider,
 } from "@mui/material";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Header from "components/Header";
 import {
-  useGetYearlyStatsQuery,
-  useGetResultStatsQuery,
-  useGetMoveAccuracyQuery,
-  useGetOpponentEloResultsQuery,
-  useGetTotalGamesQuery
+  useGetTotalGamesQuery,
+  useGetGamesByResultQuery,
+  useGetGamesByYearQuery,
+  useGetAccuracyByMonthQuery,
+  useGetAccuracyByMoveQuery,
+  useGetAccuracyByResultQuery,
+  useGetResultsByOpponentRatingQuery,
 } from "state/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
@@ -24,7 +24,6 @@ import { LocationSearchingOutlined } from "@mui/icons-material";
 import { WinIcon, LossIcon, DrawIcon } from "components/ResultIcons";
 import AnalysisBreakdown from "components/AnalysisBreakdown";
 import FlexBetween from "components/FlexBetween";
-import { TabPanel, a11yProps } from "components/TabUtils";
 import LineChart from "components/LineChart";
 import ResultsHistogram from "components/ResultsHistogram";
 import MyResponsiveBar from "components/MyResponsiveBar";
@@ -37,95 +36,103 @@ const Overview = () => {
   const endDate = useSelector((state) => state.global.endDate);
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
 
-  // MUI Tab handlers
-  const [value, setValue] = useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  // SUPA DATA
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
   };
+  const { data: totalGamesData, isLoading: isTotalGamesLoading } =
+    useGetTotalGamesQuery(supa_data);
+  const { data: gamesByResult, isLoading: isGamesByResultLoading } =
+    useGetGamesByResultQuery(supa_data);
+  const { data: gamesByYear, isLoading: isGamesByYearLoading } =
+    useGetGamesByYearQuery(supa_data);
+  const { data: accuracyByMonth, isLoading: isAccuracyByMonthLoading } =
+    useGetAccuracyByMonthQuery(supa_data);
+  const { data: accuracyByMove, isLoading: isAccuracyByMoveLoading } =
+    useGetAccuracyByMoveQuery(supa_data);
+  const { data: accuracyByResult, isLoading: isAccuracyByResultLoading } =
+    useGetAccuracyByResultQuery(supa_data);
+  const {
+    data: resultsByOpponentRating,
+    isLoading: isResultsByOpponentRatingLoading,
+  } = useGetResultsByOpponentRatingQuery(supa_data);
 
-  const { data: yearlyStats, isLoading: isYearlyStatsLoading } =
-    useGetYearlyStatsQuery();
-  const { data: resultStats, isLoading: isResultStatsLoading } =
-    useGetResultStatsQuery();
-  const { data: moveAccuracy, isLoading: isMoveAccuracyLoading } =
-    useGetMoveAccuracyQuery("All");
-  const { data: moveAccuracyWhite, isLoading: isMoveAccuracyWhiteLoading } =
-    useGetMoveAccuracyQuery("White");
-  const { data: moveAccuracyBlack, isLoading: isMoveAccuracyBlackLoading } =
-    useGetMoveAccuracyQuery("Black");
-  const { data: opponentEloResults, isLoading: isOpponentEloResultsLoading } =
-    useGetOpponentEloResultsQuery();
-    const { data: totalGamesData, isLoading: isTotalGamesLoading } =
-    useGetTotalGamesQuery({timeclass:timeClass, startdate:startDate, enddate:endDate});
   if (
-    !yearlyStats ||
-    isYearlyStatsLoading ||
-    !resultStats ||
-    isResultStatsLoading ||
-    !moveAccuracy ||
-    isMoveAccuracyWhiteLoading ||
-    !moveAccuracyWhite ||
-    isMoveAccuracyLoading ||
-    !moveAccuracyBlack ||
-    isMoveAccuracyBlackLoading ||
-    !opponentEloResults ||
-    isOpponentEloResultsLoading ||
     !totalGamesData ||
-    isTotalGamesLoading
+    isTotalGamesLoading ||
+    !gamesByResult ||
+    isGamesByResultLoading ||
+    !gamesByYear ||
+    isGamesByYearLoading ||
+    !accuracyByMonth ||
+    isAccuracyByMonthLoading ||
+    !accuracyByMove ||
+    isAccuracyByMoveLoading ||
+    !accuracyByResult ||
+    isAccuracyByResultLoading ||
+    !resultsByOpponentRating ||
+    isResultsByOpponentRatingLoading
   )
     return <CircularProgress />;
-  const win = resultStats.find((item) => item.result === "Win");
-  const draw = resultStats.find((item) => item.result === "Draw");
-  const loss = resultStats.find((item) => item.result === "Loss");
+  const win = gamesByResult.find((item) => item.Result === "Win");
+  const draw = gamesByResult.find((item) => item.Result === "Draw");
+  const loss = gamesByResult.find((item) => item.Result === "Loss");
   const chartData = [
     {
       statement: "Result",
-      participation: 2373,
-      win: win.games,
-      draw: draw.games,
-      loss: loss.games,
-      winpct: win.percentGames,
-      drawpct: draw.percentGames,
-      losspct: loss.percentGames,
+      participation: totalGamesData[0].Total,
+      win: win.Total,
+      draw: draw.Total,
+      loss: loss.Total,
+      winpct: win.Percentage * 100,
+      drawpct: draw.Percentage * 100,
+      losspct: loss.Percentage * 100,
     },
   ];
-  let totalGames = yearlyStats.reduce(function (prev, current) {
-    return prev + +current.totalGames;
-  }, 0);
-  let avgAccOverall =
-    yearlyStats.reduce(function (prev, current) {
-      return prev + +(current.totalGames * current.avgAcc);
-    }, 0) / totalGames;
-  const winAcc = resultStats.find((item) => item.result === "Win").avgAcc;
-  const drawAcc = resultStats.find((item) => item.result === "Draw").avgAcc;
-  const lossAcc = resultStats.find((item) => item.result === "Loss").avgAcc;
   const accLineData = [
     {
       id: "Average Accuracy",
-      data: yearlyStats.map((item) => {
+      data: accuracyByMonth.map((item) => {
         return {
-          x: item._id,
-          y: item.avgAcc,
+          x: item.month,
+          y: item.Accuracy,
         };
       }),
     },
   ];
-  const moveAccLineData = [
+
+  const accByMoveData = [
     {
-      id: "Average Accuracy by Move",
-      data: moveAccuracy,
+      id: "Overall Accuracy",
+      color: theme.palette.secondary[400],
+      data: accuracyByMove.map((item) => {
+        return {
+          x: item.Move,
+          y: item.All,
+        };
+      }),
     },
-  ];
-  const moveAccByColorLinesData = [
     {
-      id: "White",
-      color: "hsl(52, 70%, 50%)",
-      data: moveAccuracyWhite,
+      id: "White Accuracy",
+      color: theme.palette.secondary[200],
+      data: accuracyByMove.map((item) => {
+        return {
+          x: item.Move,
+          y: item.White,
+        };
+      }),
     },
     {
-      id: "Black",
-      color: "hsl(237, 70%, 50%)",
-      data: moveAccuracyBlack,
+      id: "Black Accuracy",
+      color: theme.palette.secondary[100],
+      data: accuracyByMove.map((item) => {
+        return {
+          x: item.Move,
+          y: item.Black,
+        };
+      }),
     },
   ];
   return (
@@ -173,9 +180,9 @@ const Overview = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={yearlyStats}
-            keys={["totalGames"]}
-            index="_id"
+            data={gamesByYear}
+            keys={["Total"]}
+            index="year"
             xlabel="Year"
             ylabel="Total Games"
             labelFormat={false}
@@ -219,7 +226,9 @@ const Overview = () => {
         >
           <Metric
             icon=<LocationSearchingOutlined sx={{ fontSize: "30px" }} />
-            value={avgAccOverall.toFixed(2)}
+            value={accuracyByResult
+              .find((item) => item.Result === "All")
+              .avg.toFixed(2)}
           />
         </Box>
         <Box
@@ -233,17 +242,23 @@ const Overview = () => {
             <AnalysisBreakdown
               title="When you Win"
               icon=<WinIcon sx={{ fontSize: "30px" }} />
-              value={`${winAcc.toFixed(1)}%`}
+              value={`${accuracyByResult
+                .find((item) => item.Result === "Win")
+                .avg.toFixed(1)}%`}
             />
             <AnalysisBreakdown
               title="When you Draw"
               icon=<DrawIcon sx={{ fontSize: "30px" }} />
-              value={`${drawAcc.toFixed(1)}%`}
+              value={`${accuracyByResult
+                .find((item) => item.Result === "Draw")
+                .avg.toFixed(1)}%`}
             />
             <AnalysisBreakdown
               title="When you Lose"
               icon=<LossIcon sx={{ fontSize: "30px" }} />
-              value={`${lossAcc.toFixed(1)}%`}
+              value={`${accuracyByResult
+                .find((item) => item.Result === "Loss")
+                .avg.toFixed(1)}%`}
             />
           </FlexBetween>
         </Box>
@@ -258,6 +273,18 @@ const Overview = () => {
             data={accLineData}
             xlabel="Year"
             ylabel="Average Accuracy"
+            xScale={{
+              type: "time",
+              format: "%Y-%m-%d",
+              useUTC: false,
+              precision: "month",
+            }}
+            xFormat="time:%Y-%m-%d"
+            axisBottom={{
+              format: "%b %Y",
+              tickValues: 5,
+              legendOffset: -12,
+            }}
           />
         </Box>
       </Box>
@@ -265,91 +292,37 @@ const Overview = () => {
       <Divider />
       <br />
       <Header subtitle="Accuracy by Move Number" sx={{ mt: "20px" }} />
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-          centered
+      <br />
+      <Box
+        mt="0px"
+        mb="20px"
+        display="grid"
+        gridTemplateColumns="repeat(12, 1fr)"
+        gridAutoRows="80px"
+        gap="20px"
+        sx={{
+          "& > div": {
+            gridColumn: isNonMediumScreens ? undefined : "span 12",
+          },
+        }}
+        backgroundColor={theme.palette.background.alt}
+        borderRadius="1.55rem"
+        p="2rem 0rem"
+      >
+        <Box
+          gridColumn="span 12"
+          gridRow="span 4"
+          backgroundColor={theme.palette.background.alt}
+          p="1rem"
+          borderRadius="1.55rem"
         >
-          <Tab
-            label="Overall"
-            style={{ color: theme.palette.secondary[200] }}
-            {...a11yProps(0)}
+          <LineChart
+            data={accByMoveData}
+            xlabel="Move Number"
+            ylabel="Average Accuracy"
+            xtickValues={[0, 10, 20, 30, 40, 50]}
           />
-          <Tab
-            label="By Piece Color"
-            style={{ color: theme.palette.secondary[200] }}
-            {...a11yProps(1)}
-          />
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <Box
-            mt="0px"
-            mb="20px"
-            display="grid"
-            gridTemplateColumns="repeat(12, 1fr)"
-            gridAutoRows="80px"
-            gap="20px"
-            sx={{
-              "& > div": {
-                gridColumn: isNonMediumScreens ? undefined : "span 12",
-              },
-            }}
-            backgroundColor={theme.palette.background.alt}
-            borderRadius="1.55rem"
-            p="2rem 0rem"
-          >
-            <Box
-              gridColumn="span 12"
-              gridRow="span 4"
-              backgroundColor={theme.palette.background.alt}
-              p="1rem"
-              borderRadius="1.55rem"
-            >
-              <LineChart
-                data={moveAccLineData}
-                xlabel="Move Number"
-                ylabel="Average Accuracy"
-                xtickValues={[0, 10, 20, 30, 40, 50]}
-              />
-            </Box>
-          </Box>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Box
-            mt="0px"
-            mb="20px"
-            display="grid"
-            gridTemplateColumns="repeat(12, 1fr)"
-            gridAutoRows="80px"
-            gap="20px"
-            sx={{
-              "& > div": {
-                gridColumn: isNonMediumScreens ? undefined : "span 12",
-              },
-            }}
-            backgroundColor={theme.palette.background.alt}
-            borderRadius="1.55rem"
-            p="2rem 0rem"
-          >
-            <Box
-              gridColumn="span 12"
-              gridRow="span 4"
-              backgroundColor={theme.palette.background.alt}
-              p="1rem"
-              borderRadius="1.55rem"
-            >
-              <LineChart
-                data={moveAccByColorLinesData}
-                xlabel="Move Number"
-                ylabel="Average Accuracy"
-                xtickValues={[0, 10, 20, 30, 40, 50]}
-                legend={true}
-              />
-            </Box>
-          </Box>
-        </TabPanel>
+        </Box>
       </Box>
       <br />
       <Header subtitle="Results by opponent rating" sx={{ mt: "20px" }} />
@@ -378,7 +351,8 @@ const Overview = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={opponentEloResults}
+            data={resultsByOpponentRating}
+            indexBy="OpponentRating"
             bottomLegend="Opponent Rating"
             tooltip={({ data }) => (
               <div
@@ -388,7 +362,7 @@ const Overview = () => {
                 }}
               >
                 <span>
-                  {data._id} - {data._id + 100}
+                  {data.OpponentRating} - {data.OpponentRating + 100}
                 </span>
                 {data.win && (
                   <>
@@ -421,6 +395,10 @@ const Overview = () => {
                 datum.id.toLowerCase().split("pct")[0]
               ];
             }}
+            legendLabel={(datum) =>
+              `${datum.id.split("pct")[0].charAt(0).toUpperCase()}` +
+              `${datum.id.split("pct")[0].substring(1)}`
+            }
           />
         </Box>
       </Box>

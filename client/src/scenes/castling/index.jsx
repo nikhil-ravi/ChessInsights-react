@@ -1,5 +1,8 @@
 import React from "react";
-import { useGetCastleStageQuery, useGetCastleTypeQuery } from "state/api";
+import {
+  useGetCastleStagesQuery,
+  useGetCastleOpponentTypeQuery,
+} from "state/api";
 import {
   Box,
   CircularProgress,
@@ -15,51 +18,59 @@ import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
 import FlexBetween from "components/FlexBetween";
 import { LocationSearchingOutlined } from "@mui/icons-material";
 import AnalysisBreakdown from "components/AnalysisBreakdown";
+import { useSelector } from "react-redux";
 
 const Castling = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data: castleStage, isLoading: isCastleStageLoading } =
-    useGetCastleStageQuery();
-  const { data: castleType, isLoading: isCastleTypeLoading } =
-    useGetCastleTypeQuery();
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate); // SUPA DATA
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
+  };
+  const { data: castleStages, isLoading: isCastleStagesLoading } =
+    useGetCastleStagesQuery(supa_data);
+  const { data: castleTypes, isLoading: isCastleTypesLoading } =
+    useGetCastleOpponentTypeQuery(supa_data);
   if (
-    !castleStage ||
-    isCastleStageLoading ||
-    !castleType ||
-    isCastleTypeLoading
+    !castleStages ||
+    isCastleStagesLoading ||
+    !castleTypes ||
+    isCastleTypesLoading
   )
     return <CircularProgress />;
-
-  const formattedData = castleType.map((datum) => {
+  const formattedData = castleTypes.map((datum) => {
     return {
-      UserCastle: datum.UserCastle,
+      UserCastle: datum.UserCastleType,
       Total: datum.Total,
       Accuracy: datum.Accuracy,
       opponentCastleData: [
         {
           OpponentCastle: "Short",
-          Win: datum.ShortWin,
-          Draw: datum.ShortDraw,
-          Loss: datum.ShortLoss,
+          Win: datum.ShortWinTotal,
+          Draw: datum.ShortDrawTotal,
+          Loss: datum.ShortLossTotal,
           WinPercentage: datum.ShortWinPercentage,
           DrawPercentage: datum.ShortDrawPercentage,
           LossPercentage: datum.ShortLossPercentage,
         },
         {
           OpponentCastle: "Long",
-          Win: datum.LongWin,
-          Draw: datum.LongDraw,
-          Loss: datum.LongLoss,
+          Win: datum.LongWinTotal,
+          Draw: datum.LongDrawTotal,
+          Loss: datum.LongLossTotal,
           WinPercentage: datum.LongWinPercentage,
           DrawPercentage: datum.LongDrawPercentage,
           LossPercentage: datum.LongLossPercentage,
         },
         {
           OpponentCastle: "NoCastling",
-          Win: datum.NoCastlingWin,
-          Draw: datum.NoCastlingDraw,
-          Loss: datum.NoCastlingLoss,
+          Win: datum.NoCastlingWinTotal,
+          Draw: datum.NoCastlingDrawTotal,
+          Loss: datum.NoCastlingLossTotal,
           WinPercentage: datum.NoCastlingWinPercentage,
           DrawPercentage: datum.NoCastlingDrawPercentage,
           LossPercentage: datum.NoCastlingLossPercentage,
@@ -98,11 +109,11 @@ const Castling = () => {
           borderRadius="1.55rem"
         >
           <BreakdownChart
-            data={castleStage}
+            data={castleStages}
             colors={(datum) => {
               return theme.palette.castleStage[datum.id.toLowerCase()];
             }}
-            id="UserCastleStage"
+            id="GameStage"
             value="Percentage"
             tooltipName="Total Games"
             tooltipValue="Total"
@@ -140,13 +151,13 @@ const Castling = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={castleStage.map((d) => ({
+            data={castleStages.map((d) => ({
               ...d,
               WinPercentage: d.WinPercentage * 100,
               DrawPercentage: d.DrawPercentage * 100,
               LossPercentage: d.LossPercentage * 100,
             }))}
-            indexBy="UserCastleStage"
+            indexBy="GameStage"
             keys={["WinPercentage", "DrawPercentage", "LossPercentage"]}
             bottomLegend="Castled In"
             tooltip={({ data }) => (
@@ -156,28 +167,28 @@ const Castling = () => {
                   background: theme.palette.primary.main,
                 }}
               >
-                <span>{data.UserCastleStage}</span>
-                {data.Win && (
+                <span>{data.GameStage}</span>
+                {data.WinTotal && (
                   <>
                     <br />
                     <strong>
-                      Win: {data.WinPercentage.toFixed(2)}% ({data.Win})
+                      Win: {data.WinPercentage.toFixed(2)}% ({data.WinTotal})
                     </strong>
                   </>
                 )}
-                {data.Draw && (
+                {data.DrawTotal && (
                   <>
                     <br />
                     <strong>
-                      Draw: {data.DrawPercentage.toFixed(2)}% ({data.Draw})
+                      Draw: {data.DrawPercentage.toFixed(2)}% ({data.DrawTotal})
                     </strong>
                   </>
                 )}
-                {data.Loss && (
+                {data.LossTotal && (
                   <>
                     <br />
                     <strong>
-                      Loss: {data.LossPercentage.toFixed(2)}% ({data.Loss})
+                      Loss: {data.LossPercentage.toFixed(2)}% ({data.LossTotal})
                     </strong>
                   </>
                 )}

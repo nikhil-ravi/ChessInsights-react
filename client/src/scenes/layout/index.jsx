@@ -1,16 +1,26 @@
 import { React, useState } from "react";
-import { Box, useMediaQuery, CssBaseline, useTheme, FormControl, MenuItem, InputLabel, Select } from "@mui/material";
+import {
+  Box,
+  useMediaQuery,
+  CssBaseline,
+  useTheme,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
+  TextField,
+} from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Navbar from "components/Navbar2";
 import Sidebar from "components/Sidebar2";
 import { useDispatch } from "react-redux";
 import { setTimeClass, setDates } from "state";
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
-import { DateRangePicker } from 'react-date-range';
 import FlexBetween from "components/FlexBetween";
-import { parseISO, format } from 'date-fns';
+import { parseISO, format } from "date-fns";
+import { DateRangePicker } from "@mui/x-date-pickers-pro";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 export const Layout = () => {
   const theme = useTheme();
@@ -41,37 +51,45 @@ export const Layout = () => {
             ...theme.mixins.toolbar,
           }}
         />
-        <br/>
+        <br />
         <FlexBetween>
-        <FormControl  sx={{ mt: "1rem", minWidth: "200px" }}>
-          <InputLabel>Time Class</InputLabel>
-          <Select
-            value={timeClass}
-            label="Time Class"
-            onChange={(e) => dispatch(setTimeClass(e.target.value))}
-          >
-            <MenuItem value="Rapid">Rapid</MenuItem>
-            <MenuItem value="Blitz">Blitz</MenuItem>
-            <MenuItem value="Bullet">Bullet</MenuItem>
-          </Select>
-        </FormControl>
-        
-        <DateRangePicker
-          onChange={item => {
-            dispatch(setDates({
-            startDate: format(item.selection.startDate, "yyyy-MM-dd"),
-            endDate: format(item.selection.endDate, "yyyy-MM-dd")
-          }))}}
-          showSelectionPreview={true}
-          moveRangeOnFirstSelection={false}
-          months={2}
-          ranges={[{
-            startDate: parseISO(startDate),
-            endDate: parseISO(endDate),
-            key: 'selection'
-          }]}
-          direction="horizontal"
-        />;
+          <FormControl sx={{ mt: "1rem", minWidth: "200px" }}>
+            <InputLabel>Time Class</InputLabel>
+            <Select
+              value={timeClass}
+              label="Time Class"
+              onChange={(e) => dispatch(setTimeClass(e.target.value))}
+            >
+              <MenuItem value="Rapid">Rapid</MenuItem>
+              <MenuItem value="Blitz">Blitz</MenuItem>
+              <MenuItem value="Bullet">Bullet</MenuItem>
+            </Select>
+          </FormControl>
+
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Box width="500px" sx={{ mt: "1rem", minWidth: "200px" }}>
+              <DateRangePicker
+                startText="Start Date"
+                endText="End Date"
+                value={[startDate, endDate]}
+                onChange={(newValue) =>
+                  dispatch(
+                    setDates([
+                      format(newValue[0], "yyyy-MM-dd"),
+                      format(newValue[1], "yyyy-MM-dd"),
+                    ])
+                  )
+                }
+                renderInput={(startProps, endProps) => (
+                  <>
+                    <TextField {...startProps} />
+                    <Box sx={{ mx: 2 }}> to </Box>
+                    <TextField {...endProps} />
+                  </>
+                )}
+              />
+            </Box>
+          </LocalizationProvider>
         </FlexBetween>
         <p>Time Class: {timeClass}</p>
         <p>Start Date: {startDate}</p>

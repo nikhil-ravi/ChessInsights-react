@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetPieceCntAccQuery } from "state/api";
+import { useGetPieceCntAccQuery, useGetPieceStatsQuery } from "state/api";
 import {
   Box,
   CircularProgress,
@@ -11,14 +11,43 @@ import Header from "components/Header";
 import BreakdownChart from "components/BreakdownChart";
 import MyResponsiveBar from "components/MyResponsiveBar";
 import ResultsHistogram from "components/ResultsHistogram";
+import { useSelector } from "react-redux";
+
+const pieceAlias = {
+  p: "Pawn",
+  n: "Knight",
+  b: "Bishop",
+  r: "Rook",
+  q: "Queen",
+  k: "King",
+};
 
 const Pieces = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const timeClass = useSelector((state) => state.global.timeClass);
+  const startDate = useSelector((state) => state.global.startDate);
+  const endDate = useSelector((state) => state.global.endDate); // SUPA DATA
+  const supa_data = {
+    timeclass: timeClass,
+    startdate: startDate,
+    enddate: endDate,
+  };
+  const { data: pieceStats, isLoading: isPieceStatsLoading } =
+    useGetPieceStatsQuery(supa_data);
   const { data: pieceCntAcc, isLoading: isPieceCntAccLoading } =
     useGetPieceCntAccQuery();
-  if (!pieceCntAcc || isPieceCntAccLoading) return <CircularProgress />;
-
+  if (
+    !pieceCntAcc ||
+    isPieceCntAccLoading ||
+    !pieceStats ||
+    isPieceStatsLoading
+  )
+    return <CircularProgress />;
+  const formattedData = pieceStats.map((item) => ({
+    ...item,
+    Piece: pieceAlias[item.Piece],
+  }));
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="Pieces" subtitle="Moves per piece" sx={{ mt: "20px" }} />
@@ -46,12 +75,12 @@ const Pieces = () => {
           borderRadius="1.55rem"
         >
           <BreakdownChart
-            data={pieceCntAcc}
+            data={formattedData}
             colors={{ scheme: "nivo" }}
             id="Piece"
             value="Percentage"
             tooltipName="Total Moves"
-            tooltipValue="Moves"
+            tooltipValue="Total"
             arcLinkLabel={(d) => `${d.id}: ${d.value}`}
           />
         </Box>
@@ -84,17 +113,17 @@ const Pieces = () => {
           borderRadius="1.55rem"
         >
           <ResultsHistogram
-            data={pieceCntAcc.map((d) => ({
+            data={formattedData.map((d) => ({
               ...d,
-              PercentageOpening: d.PercentageOpening * 100,
-              PercentageMiddlegame: d.PercentageMiddlegame * 100,
-              PercentageEndgame: d.PercentageEndgame * 100,
+              OpeningPercentage: d.OpeningPercentage * 100,
+              MiddlegamePercentage: d.MiddlegamePercentage * 100,
+              EndgamePercentage: d.EndgamePercentage * 100,
             }))}
             indexBy="Piece"
             keys={[
-              "PercentageOpening",
-              "PercentageMiddlegame",
-              "PercentageEndgame",
+              "OpeningPercentage",
+              "MiddlegamePercentage",
+              "EndgamePercentage",
             ]}
             bottomLegend="Piece"
             tooltip={({ data }) => (
@@ -105,30 +134,30 @@ const Pieces = () => {
                 }}
               >
                 <span>{data.Piece}</span>
-                {data.MovesOpening && (
+                {data.OpeningTotal && (
                   <>
                     <br />
                     <strong>
-                      Opening: {data.PercentageOpening.toFixed(2)}% (
-                      {data.MovesOpening})
+                      Opening: {data.OpeningPercentage.toFixed(2)}% (
+                      {data.OpeningTotal})
                     </strong>
                   </>
                 )}
-                {data.MovesMiddlegame && (
+                {data.MiddlegameTotal && (
                   <>
                     <br />
                     <strong>
-                      Middlegame: {data.PercentageMiddlegame.toFixed(2)}% (
-                      {data.MovesMiddlegame})
+                      Middlegame: {data.MiddlegamePercentage.toFixed(2)}% (
+                      {data.MiddlegameTotal})
                     </strong>
                   </>
                 )}
-                {data.MovesEndgame && (
+                {data.EndgameTotal && (
                   <>
                     <br />
                     <strong>
-                      Endgame: {data.PercentageEndgame.toFixed(2)}% (
-                      {data.MovesEndgame})
+                      Endgame: {data.EndgamePercentage.toFixed(2)}% (
+                      {data.EndgameTotal})
                     </strong>
                   </>
                 )}
@@ -136,10 +165,10 @@ const Pieces = () => {
             )}
             colors={(datum) => {
               return theme.palette.gamephase[
-                datum.id.toLowerCase().split("percentage").slice(1)
+                datum.id.toLowerCase().split("percentage")[0]
               ];
             }}
-            legendLabel={(datum) => `${datum.id.split("Percentage").slice(1)}`}
+            legendLabel={(datum) => `${datum.id.split("Percentage")[0]}`}
             legends={[
               {
                 dataFrom: "keys",
@@ -195,8 +224,8 @@ const Pieces = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={pieceCntAcc}
-            keys={["AvgAcc"]}
+            data={formattedData}
+            keys={["Accuracy"]}
             index="Piece"
             xlabel="Piece"
             ylabel="Average Accuracy"
@@ -248,8 +277,8 @@ const Pieces = () => {
           borderRadius="1.55rem"
         >
           <MyResponsiveBar
-            data={pieceCntAcc}
-            keys={["AvgAccOpening", "AvgAccMiddlegame", "AvgAccEndgame"]}
+            data={formattedData}
+            keys={["OpeningAccuracy", "MiddlegameAccuracy", "EndgameAccuracy"]}
             index="Piece"
             xlabel="Piece"
             ylabel="Average Accuracy"
@@ -263,7 +292,7 @@ const Pieces = () => {
                   background: theme.palette.primary.main,
                 }}
               >
-                <span>{id.split("AvgAcc").slice(1)} Accuracy</span>
+                <span>{id.split("Accuracy")[0]} Accuracy</span>
                 <br />
                 <span>
                   {indexValue}: {value.toFixed(2)}%
@@ -273,10 +302,10 @@ const Pieces = () => {
             padding={0.1}
             colors={(datum) => {
               return theme.palette.gamephase[
-                datum.id.toLowerCase().split("avgacc").slice(1)
+                datum.id.toLowerCase().split("accuracy")[0]
               ];
             }}
-            legendLabel={(datum) => `${datum.id.split("AvgAcc").slice(1)}`}
+            legendLabel={(datum) => `${datum.id.split("Accuracy")[0]}`}
             legend={[
               {
                 dataFrom: "keys",
