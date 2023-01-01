@@ -7,7 +7,13 @@ import {
 
 const router = express.Router();
 
-router.get("/todstats/:timeclass/:startdate/:enddate", getTimeOfDayStats);
-router.get("/dowstats/:timeclass/:startdate/:enddate", getDayOfWeekStats);
+router.get(
+  "/todstats/:username/:timeclass/:startdate/:enddate",
+  getTimeOfDayStats
+);
+router.get(
+  "/dowstats/:username/:timeclass/:startdate/:enddate",
+  getDayOfWeekStats
+);
 
 export default router;

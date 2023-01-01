@@ -173,10 +173,12 @@ const Geography = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const userName = useSelector((state) => state.global.userName);
   const timeClass = useSelector((state) => state.global.timeClass);
   const startDate = useSelector((state) => state.global.startDate);
   const endDate = useSelector((state) => state.global.endDate); // SUPA DATA
   const supa_data = {
+    username: userName, 
     timeclass: timeClass,
     startdate: startDate,
     enddate: endDate,

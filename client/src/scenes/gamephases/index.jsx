@@ -17,10 +17,12 @@ import { useSelector } from "react-redux";
 const GamePhases = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const userName = useSelector((state) => state.global.userName);
   const timeClass = useSelector((state) => state.global.timeClass);
   const startDate = useSelector((state) => state.global.startDate);
   const endDate = useSelector((state) => state.global.endDate);
   const supa_data = {
+    username: userName, 
     timeclass: timeClass,
     startdate: startDate,
     enddate: endDate,

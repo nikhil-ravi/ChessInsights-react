@@ -24,79 +24,79 @@ export const api = createApi({
     /* SUPA ENDPOINTS */
     // GAMES
     getTotalGames: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/totalgames/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/totalgames/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["TotalGames"],
     }),
     getGamesByResult: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/gamesbyresult/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/gamesbyresult/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["GamesByResult"],
     }),
     getGamesByYear: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/gamesbyyear/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/gamesbyyear/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["GamesByYear"],
     }),
     getAccuracyByMonth: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/accuracybymonth/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/accuracybymonth/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["AccuracyByMonth"],
     }),
     getAccuracyByMove: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/accuracybymove/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/accuracybymove/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["AccuracyByMove"],
     }),
     getAccuracyByResult: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/accuracybyresult/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/accuracybyresult/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["AccuracyByResult"],
     }),
     getResultsByOpponentRating: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/resultsbyopponentrating/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/resultsbyopponentrating/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["ResultsByOpponentRating"],
     }),
     getGameByTerminationandResults: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/gamebyterminationandresults/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/gamebyterminationandresults/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["GameByTerminationandResults"],
     }),
     getGamePhases: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `games/gamephases/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/gamephases/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["GamePhases"],
     }),
     // MOVES
     getPieceStats: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `moves/getpiecestats/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `moves/getpiecestats/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["PieceStats"],
     }),
     getCastleStages: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `moves/castlestage/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `moves/castlestage/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["CastleStages"],
     }),
     getCastleOpponentType: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `moves/castletype/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `moves/castletype/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["CastleOppornentType"],
     }),
     getTimeOfDayStats: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `calendar/todstats/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `calendar/todstats/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["TimeOfDayStats"],
     }),
     getDayOfWeekStats: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `calendar/dowstats/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `calendar/dowstats/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["DayOfWeekStats"],
     }),
     getGeographyStats: build.query({
-      query: ({ timeclass, startdate, enddate }) =>
-        `geography/geography/${timeclass}/${startdate}/${enddate}`,
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `geography/geography/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["GeographyStats"],
     }),
   }),
