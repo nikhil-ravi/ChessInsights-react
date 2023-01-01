@@ -16,22 +16,10 @@ import Navbar from "components/Navbar2";
 import Sidebar from "components/Sidebar2";
 import { useDispatch } from "react-redux";
 import { setTimeClass, setDates, setUserName } from "state";
-import FlexBetween from "components/FlexBetween";
-import { parseISO, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRangePicker } from "@mui/x-date-pickers-pro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
 
 export const Layout = () => {
   const theme = useTheme();
@@ -56,15 +44,15 @@ export const Layout = () => {
         open={isSidebarOpen}
         setOpen={setIsSidebarOpen}
       />
-
-      <Box component="main" sx={{ flexGrow: 1, p: isNonMobile ? 10 : 1 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: isNonMobile ? 10 : 5, maxWidth: "1080px" }}
+      >
         <div
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
-            // padding: theme.spacing(0, 1),
-            // necessary for content to be below app bar
             ...theme.mixins.toolbar,
           }}
         />

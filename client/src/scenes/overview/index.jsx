@@ -39,7 +39,7 @@ const Overview = () => {
 
   // SUPA DATA
   const supa_data = {
-    username: userName, 
+    username: userName,
     timeclass: timeClass,
     startdate: startDate,
     enddate: endDate,
@@ -141,7 +141,7 @@ const Overview = () => {
     <Box>
       <Header
         title="Overview"
-        subtitle="Overview of general revenue and profit"
+        subtitle="How accurately are you playing in your games?"
       />
       <Box
         mt="20px"

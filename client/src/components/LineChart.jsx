@@ -62,7 +62,6 @@ const LineChart = ({
           },
         },
       }}
-      //   colors={datumColor ? { datum: "data.color" } : undefined}
       xScale={xScale}
       xFormat={xFormat}
       yScale={{
@@ -88,10 +87,6 @@ const LineChart = ({
         format: (d) => `${d}%`,
       }}
       pointSize={0}
-      //   pointColor={{ theme: "background" }}
-      //   pointBorderWidth={2}
-      //   pointBorderColor={{ from: "serieColor" }}
-      //   pointLabelYOffset={-12}
       useMesh={true}
       legends={
         legend
