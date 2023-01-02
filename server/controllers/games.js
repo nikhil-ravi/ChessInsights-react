@@ -117,3 +117,13 @@ export const getGamePhases = async (req, res) => {
   if (error) res.status(404).json({ message: error.message });
   else res.status(200).json(gamesPhases);
 };
+
+export const getRating = async (req, res) => {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY
+  );
+  let { data: rating, error } = await supabase.rpc("getRating", req.params);
+  if (error) res.status(404).json({ message: error.message });
+  else res.status(200).json(rating);
+};

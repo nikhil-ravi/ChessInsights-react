@@ -22,6 +22,8 @@ const LineChart = ({
     legendPosition: "middle",
     tickValues: xtickValues,
   },
+  axisLeftFormat = (d) => `${d}%`,
+  curve = "linear",
 }) => {
   const theme = useTheme();
   return (
@@ -84,7 +86,7 @@ const LineChart = ({
         legendOffset: -50,
         legendPosition: "middle",
         tickValues: ytickValues,
-        format: (d) => `${d}%`,
+        format: axisLeftFormat,
       }}
       pointSize={0}
       useMesh={true}
@@ -118,7 +120,7 @@ const LineChart = ({
             ]
           : undefined
       }
-      curve="linear"
+      curve={curve}
       enableArea={true}
       enableGridX={false}
       enableSlices="x"

@@ -13,6 +13,7 @@ export const api = createApi({
     "ResultsByOpponentRating",
     "GameByTerminationandResults",
     "GamePhases",
+    "Rating",
     "PieceStats",
     "CastleStages",
     "CastleOppornentType",
@@ -68,6 +69,11 @@ export const api = createApi({
         `games/gamephases/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["GamePhases"],
     }),
+    getRating: build.query({
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/rating/${username}/${timeclass}/${startdate}/${enddate}`,
+      providesTags: ["Rating"],
+    }),
     // MOVES
     getPieceStats: build.query({
       query: ({ username, timeclass, startdate, enddate }) =>
@@ -114,6 +120,7 @@ export const {
   useGetResultsByOpponentRatingQuery,
   useGetGameByTerminationandResultsQuery,
   useGetGamePhasesQuery,
+  useGetRatingQuery,
   // MOVES
   useGetPieceStatsQuery,
   useGetCastleStagesQuery,

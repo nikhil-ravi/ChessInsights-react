@@ -15,6 +15,7 @@ import {
   useGetAccuracyByMoveQuery,
   useGetAccuracyByResultQuery,
   useGetResultsByOpponentRatingQuery,
+  useGetRatingQuery,
 } from "state/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
@@ -60,6 +61,8 @@ const Overview = () => {
     data: resultsByOpponentRating,
     isLoading: isResultsByOpponentRatingLoading,
   } = useGetResultsByOpponentRatingQuery(supa_data);
+  const { data: rating, isLoading: isRatingLoading } =
+    useGetRatingQuery(supa_data);
 
   if (
     !totalGamesData ||
@@ -75,7 +78,9 @@ const Overview = () => {
     !accuracyByResult ||
     isAccuracyByResultLoading ||
     !resultsByOpponentRating ||
-    isResultsByOpponentRatingLoading
+    isResultsByOpponentRatingLoading ||
+    !rating ||
+    isRatingLoading
   )
     return <CircularProgress />;
   const win = gamesByResult.find((item) => item.Result === "Win");
@@ -93,6 +98,24 @@ const Overview = () => {
       losspct: loss.Percentage * 100,
     },
   ];
+  const ratingLineData = [
+    {
+      id: "Rating",
+      data: rating.map((item) => {
+        return {
+          x: item.Date,
+          y: item.Rating,
+        };
+      }),
+    },
+  ];
+  var maxRating = Math.max.apply(
+    Math,
+    rating.map(function (o) {
+      return o.Rating;
+    })
+  );
+  console.log(ratingLineData);
   const accLineData = [
     {
       id: "Average Accuracy",
@@ -173,6 +196,34 @@ const Overview = () => {
           borderRadius="1.55rem"
         >
           <MarimekkoChart chartData={chartData} />
+        </Box>
+        <Box
+          gridColumn="span 12"
+          gridRow="span 4"
+          backgroundColor={theme.palette.background.alt}
+          p="1rem"
+          borderRadius="1.55rem"
+        >
+          <LineChart
+            data={ratingLineData}
+            xlabel="Year"
+            ylabel="Rating"
+            ymax={maxRating}
+            xScale={{
+              type: "time",
+              format: "%Y-%m-%d",
+              useUTC: false,
+              precision: "millisecond",
+            }}
+            xFormat="time:%Y-%m-%d"
+            axisBottom={{
+              format: "%b %Y",
+              tickValues: 5,
+              legendOffset: -12,
+            }}
+            axisLeftFormat={(d) => `${d}`}
+            curve="catmullRom"
+          />
         </Box>
         <Box
           gridColumn="span 12"
