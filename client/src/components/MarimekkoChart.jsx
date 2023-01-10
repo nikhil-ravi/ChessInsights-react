@@ -53,20 +53,35 @@ const MarimekkoChart = ({ chartData, textVariant = "h3" }) => {
       <FlexBetween p="0.1rem 1rem">
         <FlexBetween>
           <LocalHospital style={{ fill: theme.palette.result.win }} />
-          <Typography variant={textVariant} fontWeight="600" mr="10px">
-            {chartData[0].winpct.toFixed(1)}%
+          <Typography
+            variant={textVariant}
+            fontWeight="600"
+            mr="10px"
+            ml="10px"
+          >
+            {chartData[0].win} ({chartData[0].winpct.toFixed(1)}%)
           </Typography>
         </FlexBetween>
         <FlexBetween>
           <BalanceOutlined style={{ fill: theme.palette.result.draw }} />
-          <Typography variant={textVariant} fontWeight="600" mr="10px">
-            {chartData[0].drawpct.toFixed(1)}%
+          <Typography
+            variant={textVariant}
+            fontWeight="600"
+            mr="10px"
+            ml="10px"
+          >
+            {chartData[0].draw} ({chartData[0].drawpct.toFixed(1)}%)
           </Typography>
         </FlexBetween>
         <FlexBetween>
           <IndeterminateCheckBox style={{ fill: theme.palette.result.loss }} />
-          <Typography variant={textVariant} fontWeight="600" mr="10px">
-            {chartData[0].losspct.toFixed(1)}%
+          <Typography
+            variant={textVariant}
+            fontWeight="600"
+            mr="10px"
+            ml="10px"
+          >
+            {chartData[0].loss} ({chartData[0].losspct.toFixed(1)}%)
           </Typography>
         </FlexBetween>
       </FlexBetween>
@@ -115,9 +130,7 @@ const MarimekkoChart = ({ chartData, textVariant = "h3" }) => {
           axisLeft={undefined}
           axisBottom={undefined}
           colors={(datum) => {
-            return theme.palette.result[
-              datum.id.toLowerCase()
-            ];
+            return theme.palette.result[datum.id.toLowerCase()];
           }}
         />
       </Box>

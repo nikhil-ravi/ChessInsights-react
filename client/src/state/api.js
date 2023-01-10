@@ -14,6 +14,7 @@ export const api = createApi({
     "GameByTerminationandResults",
     "GamePhases",
     "Rating",
+    "MaxRating",
     "PieceStats",
     "CastleStages",
     "CastleOppornentType",
@@ -74,6 +75,11 @@ export const api = createApi({
         `games/rating/${username}/${timeclass}/${startdate}/${enddate}`,
       providesTags: ["Rating"],
     }),
+    getMaxRating: build.query({
+      query: ({ username, timeclass, startdate, enddate }) =>
+        `games/maxrating/${username}/${timeclass}/${startdate}/${enddate}`,
+      providesTags: ["MaxRating"],
+    }),
     // MOVES
     getPieceStats: build.query({
       query: ({ username, timeclass, startdate, enddate }) =>
@@ -121,6 +127,7 @@ export const {
   useGetGameByTerminationandResultsQuery,
   useGetGamePhasesQuery,
   useGetRatingQuery,
+  useGetMaxRatingQuery,
   // MOVES
   useGetPieceStatsQuery,
   useGetCastleStagesQuery,

@@ -11,6 +11,7 @@ import {
   getGameByTerminationandResults,
   getGamePhases,
   getRating,
+  getMaxRating,
 } from "../controllers/games.js";
 
 const router = express.Router();
@@ -53,5 +54,6 @@ router.get(
   getGamePhases
 );
 router.get("/rating/:username/:timeclass/:startdate/:enddate", getRating);
+router.get("/maxrating/:username/:timeclass/:startdate/:enddate", getMaxRating);
 
 export default router;

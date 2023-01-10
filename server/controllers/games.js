@@ -127,3 +127,13 @@ export const getRating = async (req, res) => {
   if (error) res.status(404).json({ message: error.message });
   else res.status(200).json(rating);
 };
+
+export const getMaxRating = async (req, res) => {
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY
+  );
+  let { data: maxRating, error } = await supabase.rpc("maxRating", req.params);
+  if (error) res.status(404).json({ message: error.message });
+  else res.status(200).json(maxRating);
+};

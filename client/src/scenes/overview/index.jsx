@@ -16,12 +16,16 @@ import {
   useGetAccuracyByResultQuery,
   useGetResultsByOpponentRatingQuery,
   useGetRatingQuery,
+  useGetMaxRatingQuery,
 } from "state/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChessBoard } from "@fortawesome/free-solid-svg-icons";
 import MarimekkoChart from "components/MarimekkoChart";
 import Metric from "components/Metric";
-import { LocationSearchingOutlined } from "@mui/icons-material";
+import {
+  LocationSearchingOutlined,
+  BarChartOutlined,
+} from "@mui/icons-material";
 import { WinIcon, LossIcon, DrawIcon } from "components/ResultIcons";
 import AnalysisBreakdown from "components/AnalysisBreakdown";
 import FlexBetween from "components/FlexBetween";
@@ -63,6 +67,8 @@ const Overview = () => {
   } = useGetResultsByOpponentRatingQuery(supa_data);
   const { data: rating, isLoading: isRatingLoading } =
     useGetRatingQuery(supa_data);
+  const { data: maxRating, isLoading: isMaxRatingLoading } =
+    useGetMaxRatingQuery(supa_data);
 
   if (
     !totalGamesData ||
@@ -80,7 +86,9 @@ const Overview = () => {
     !resultsByOpponentRating ||
     isResultsByOpponentRatingLoading ||
     !rating ||
-    isRatingLoading
+    isRatingLoading ||
+    !maxRating ||
+    isMaxRatingLoading
   )
     return <CircularProgress />;
   const win = gamesByResult.find((item) => item.Result === "Win");
@@ -109,13 +117,6 @@ const Overview = () => {
       }),
     },
   ];
-  var maxRating = Math.max.apply(
-    Math,
-    rating.map(function (o) {
-      return o.Rating;
-    })
-  );
-  console.log(ratingLineData);
   const accLineData = [
     {
       id: "Average Accuracy",
@@ -162,15 +163,12 @@ const Overview = () => {
   ];
   return (
     <Box>
-      <Header
-        title="Overview"
-        subtitle="How accurately are you playing in your games?"
-      />
+      <Header title="Overview" />
       <Box
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="80px"
+        gridAutoRows="100px"
         gap="20px"
         sx={{
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
@@ -184,19 +182,55 @@ const Overview = () => {
           borderRadius="1.55rem"
         >
           <Metric
-            icon=<FontAwesomeIcon icon={faChessBoard} size="2x" />
+            title="Total Games"
             value={totalGamesData[0].Total}
+            icon=<FontAwesomeIcon icon={faChessBoard} size="2x" />
+            valueFontVariant="h6"
+            p="1.65rem 1rem"
           />
         </Box>
         <Box
-          gridColumn="span 10"
+          gridColumn="span 2"
           gridRow="span 1"
           backgroundColor={theme.palette.background.alt}
-          p="0rem"
           borderRadius="1.55rem"
         >
-          <MarimekkoChart chartData={chartData} />
+          <Metric
+            title="Highest Rating"
+            subTitle={maxRating[0].Date}
+            value={maxRating[0].Rating}
+            icon=<BarChartOutlined sx={{ fontSize: "30px" }} />
+            valueFontVariant="h6"
+          />
         </Box>
+        <Box
+          gridColumn="span 8"
+          gridRow="span 1"
+          backgroundColor={theme.palette.background.alt}
+          p="1rem"
+          borderRadius="1.55rem"
+        >
+          <MarimekkoChart
+            chartData={chartData}
+            textVariant={isNonMediumScreens ? "h4" : "h4"}
+          />
+        </Box>
+      </Box>
+      <br />
+      <Divider />
+      <br />
+      <Header subtitle="How accurately are you playing in your games?" />
+      <Box
+        mt="20px"
+        display="grid"
+        gridTemplateColumns="repeat(12, 1fr)"
+        gridAutoRows="80px"
+        gap="20px"
+        sx={{
+          "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
+        }}
+        // mb="20px"
+      >
         <Box
           gridColumn="span 12"
           gridRow="span 4"
@@ -208,7 +242,7 @@ const Overview = () => {
             data={ratingLineData}
             xlabel="Year"
             ylabel="Rating"
-            ymax={maxRating}
+            ymax={maxRating[0].Rating}
             xScale={{
               type: "time",
               format: "%Y-%m-%d",
@@ -222,7 +256,7 @@ const Overview = () => {
               legendOffset: -12,
             }}
             axisLeftFormat={(d) => `${d}`}
-            curve="catmullRom"
+            curve="monotoneX"
           />
         </Box>
         <Box
