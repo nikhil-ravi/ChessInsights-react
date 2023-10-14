@@ -3,6 +3,7 @@
 Chess insights drawn by analyzing Chess.com games of a player.
 
 ![Screenshot](./screenshot.jpeg)
+![Map Screenshot](./map_screenshot.jpeg)
 
 # Installation
 
